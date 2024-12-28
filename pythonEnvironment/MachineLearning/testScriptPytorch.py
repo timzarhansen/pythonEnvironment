@@ -84,6 +84,7 @@ num_epochs = 3
 train_dataset = datasets.MNIST(
     root="../data", train=True, transform=transforms.ToTensor(), download=True
 )
+
 print("stopeed downloading MNIST, now we start the rest ")
 # To do hyperparameter search, include more batch_sizes you want to try
 # and more learning rates!
