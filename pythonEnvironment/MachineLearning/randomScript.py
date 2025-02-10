@@ -1,69 +1,35 @@
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torchvision import datasets, transforms
+from recursiveGPTModel import RecursiveGPTModel
 
-# Define the SimpleNet model
-class SimpleNet(nn.Module):
-    def __init__(self):
-        super(SimpleNet, self).__init__()
-        self.fc1 = nn.Linear(28 * 28, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 10)
+device = 'mps' if torch.mps.is_available() else 'cpu'
 
-    def forward(self, x):
-        x = x.view(-1, 28 * 28)
-        x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
 
-# Load the MNIST dataset
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
-train_dataset = datasets.MNIST(root='data', train=True, download=True, transform=transform)
-test_dataset = datasets.MNIST(root='data', train=False, download=True, transform=transform)
+with open('data/tinyshakespeare.txt', 'r', encoding='utf-8') as f:
+    text = f.read()
 
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1000, shuffle=False)
+# here are all the unique characters that occur in this text
+chars = sorted(list(set(text)))
+vocab_size = len(chars)
+stoi = {ch: i for i, ch in enumerate(chars)}
+itos = {i: ch for i, ch in enumerate(chars)}
+encode = lambda s: [stoi[c] for c in s]  # encoder: take a string, output a list of integers
+decode = lambda l: ''.join([itos[i] for i in l])  # decoder: take a list of integers, output a string
 
-# Initialize the model
-model = SimpleNet()
 
-# Define loss function and optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+pretrained_dict = torch.load('modelSaved/gptModel.pth')
 
-# Train the model
-def train_model(model, train_loader, criterion, optimizer, epochs):
-    for epoch in range(epochs):
-        running_loss = 0.0
-        for batch_idx, (data, target) in enumerate(train_loader):
-            optimizer.zero_grad()
-            output = model(data)
-            loss = criterion(output, target)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
-        print(f'Epoch {epoch+1}, Loss: {running_loss/len(train_loader)}')
+# Instantiate the SubModel
+submodel = RecursiveGPTModel(vocab_size,device)
 
-# Test the model
-def test_model(model, test_loader):
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for data, target in test_loader:
-            output = model(data)
-            _, predicted = torch.max(output.data, 1)
-            total += target.size(0)
-            correct += (predicted == target).sum().item()
-    print(f'Accuracy: {100 * correct / total}%')
+# Load the state dict, but only for the layers that match
+submodel.load_state_dict(pretrained_dict, strict=False)
+submodel.to(device)
+submodel.eval()
+context = torch.zeros((1, 1), dtype=torch.long, device=device)
+print(decode(submodel.generate(context, max_new_tokens=500)[0].tolist()))
 
-# Train the model for a few epochs
-train_model(model, train_loader, criterion, optimizer, epochs=5)
 
-# Test the model
-test_model(model, test_loader)
 
-# Save the trained model
-torch.save(model.state_dict(), 'modelSaved/simple_net.pth')
-print('Model saved as simple_net.pth')
+
+
