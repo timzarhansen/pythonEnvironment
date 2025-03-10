@@ -41,9 +41,9 @@ for numberOfSkips_ in numberOfSkips:
                     }
                 }
 
-                configFileNameHost = '/Users/timhansen/Documents/ros_ws/src/UnderwaterSlam/params/pythonGeneratedParams/config'+str(currentNumberScript)+'.yaml'
+                configFileNameHost = '/home/deeprobotics/ros_ws/src/UnderwaterSlam/params/pythonGeneratedParams/config'+str(currentNumberScript)+'.yaml'
                 configFileNameDocker = '/home/tim-external/ros_ws/src/UnderwaterSlam/params/pythonGeneratedParams/config'+str(currentNumberScript)+'.yaml'
-                bashFileNameHost = '/Users/timhansen/Documents/ros_ws/src/UnderwaterSlam/bashScript/bashScriptsPythonGenerated/myscript'+str(currentNumberScript)+'.sh'
+                bashFileNameHost = '/home/deeprobotics/ros_ws/src/UnderwaterSlam/bashScript/bashScriptsPythonGenerated/myscript'+str(currentNumberScript)+'.sh'
                 bashFileNameDocker = '/home/tim-external/ros_ws/src/UnderwaterSlam/bashScript/bashScriptsPythonGenerated/myscript'+str(currentNumberScript)+'.sh'
                 with open(configFileNameHost, 'w') as file:
                     yaml.dump(config, file, default_flow_style=False)
@@ -74,23 +74,23 @@ for numberOfSkips_ in numberOfSkips:
                         (stats := c.stats(stream=False)))
                     print("Memory usage is: ", total_memory_usage)
 
-                    if (total_memory_usage < 70):
+                    if (total_memory_usage < 50):
                         print("running container number: ", currentNumberScript)
                         container = client.containers.run(
                             image='computationimageodometry',
                             command=bashFileNameDocker,
                             volumes={
-                                '/Users/timhansen/Documents/ros_ws/cache/humble/build': {
+                                '/home/deeprobotics/ros_ws/cache/humble/build': {
                                     'bind': '/home/tim-external/ros_ws/build', 'mode': 'cached'},
-                                '/Users/timhansen/Documents/ros_ws/cache/humble/install': {
+                                '/home/deeprobotics/ros_ws/cache/humble/install': {
                                     'bind': '/home/tim-external/ros_ws/install', 'mode': 'cached'},
-                                '/Users/timhansen/Documents/ros_ws/cache/humble/log': {
+                                '/home/deeprobotics/ros_ws/cache/humble/log': {
                                     'bind': '/home/tim-external/ros_ws/log', 'mode': 'cached'},
-                                '/Users/timhansen/Documents/ros_ws/configFiles': {
+                                '/home/deeprobotics/ros_ws/configFiles': {
                                     'bind': '/home/tim-external/ros_ws/configFiles', 'mode': 'cached'},
-                                '/Users/timhansen/Documents/ros_ws/src': {'bind': '/home/tim-external/ros_ws/src',
+                                '/home/deeprobotics/ros_ws/src': {'bind': '/home/tim-external/ros_ws/src',
                                                                           'mode': 'cached'},
-                                '/Users/timhansen/Documents/dataFolder': {'bind': '/home/tim-external/dataFolder',
+                                '/home/deeprobotics/dataFolder': {'bind': '/home/tim-external/dataFolder',
                                                                           'mode': 'cached'}
                             },
                             # network='devcontainer'+str(i)+'_net',
