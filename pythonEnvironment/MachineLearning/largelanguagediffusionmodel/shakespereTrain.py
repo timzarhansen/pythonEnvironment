@@ -10,15 +10,15 @@ from pythonEnvironment.MachineLearning.largelanguagediffusionmodel import config
 #1414 s mit MPS
 # hyperparameters
 batch_size = 128 # how many independent sequences will we process in parallel?
-block_size = 512 # what is the maximum context length for predictions?
+block_size = 256 # what is the maximum context length for predictions?
 max_iters = 10000
 eval_interval = 200
-learning_rate = 1e-5
+learning_rate = 1e-4
 device = 'mps' if torch.mps.is_available() else 'cpu'
 eval_iters = 200 #was 200
 n_embd = 384
-n_head = 3
-n_layer = 3
+n_head = 6
+n_layer = 6
 dropout = 0.2
 # ------------
 

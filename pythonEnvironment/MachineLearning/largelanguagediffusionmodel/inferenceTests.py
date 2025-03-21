@@ -9,9 +9,9 @@ from pythonEnvironment.MachineLearning.largelanguagediffusionmodel import config
 
 #1414 s mit MPS
 # hyperparameters
-batch_size = 64 # how many independent sequences will we process in parallel?
+batch_size = 128 # how many independent sequences will we process in parallel?
 block_size = 256 # what is the maximum context length for predictions?
-max_iters = 5000
+max_iters = 10000
 eval_interval = 200
 learning_rate = 1e-4
 device = 'mps' if torch.mps.is_available() else 'cpu'
@@ -110,17 +110,30 @@ if __name__ == '__main__':
     # generate from the model
     contextInput = torch.zeros((1, block_size), dtype=torch.long, device=device)
     contextInput.fill_(encode('_')[0])
+
+    ix = torch.randint(len(train_data) - block_size, (1,))
+    x = torch.stack([train_data[i:i+block_size] for i in ix])
+    # sampleInput =
+    contextInput[0,0:50]= x[0,0:50]
+
+
+
     sampled_idx = contextInput
-    for i in range(5):
+    sampled_idx = sampled_idx.view(-1)
+    print(decode(sampled_idx.tolist()))
+    print("---------------------------------------------------------------------------")
+
+    for i in range(10):
         llmOutput = model(sampled_idx.view(1,-1))
         probs = torch.softmax(llmOutput.logits, dim=-1).view(block_size,vocab_size)
         sampled_idx = torch.multinomial(probs, 1).view(block_size)
         print(decode(sampled_idx.tolist()))
 
         # masking
-        # mask = torch.rand(block_size) < 0.01  # 10 percent is changed to token
-        # sampled_idx[mask] = encode('_')[0]  # Replace elements where mask is True
-        # print(decode(sampled_idx.tolist()))
+        mask = torch.rand(block_size) < 0.01  # 10 percent is changed to token
+        sampled_idx[mask] = encode('_')[0]  # Replace elements where mask is True
+        contextInput[0, 0:50] = x[0, 0:50]
+        print(decode(sampled_idx.tolist()))
         print("---------------------------------------------------------------------------")
 
 
