@@ -9,12 +9,13 @@ from pythonEnvironment.MachineLearning.largelanguagediffusionmodel import config
 
 #1414 s mit MPS
 # hyperparameters
-batch_size = 128 # how many independent sequences will we process in parallel?
-block_size = 256 # what is the maximum context length for predictions?
+batch_size = 64 # how many independent sequences will we process in parallel?
+block_size = 512 # what is the maximum context length for predictions?
 max_iters = 10000
 eval_interval = 200
-learning_rate = 1e-4
-device = 'mps' if torch.mps.is_available() else 'cpu'
+learning_rate = 3e-5
+# device = 'mps' if torch.mps.is_available() else 'cpu'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200 #was 200
 n_embd = 384
 n_head = 6
@@ -129,8 +130,8 @@ if __name__ == '__main__':
         mask = mask.bool()  # Ensure boolean type if not already
         Y_masked = yb[mask]
         output_models_masked = outputModel.logits[mask, :]
-        # loss = F.cross_entropy(output_models_masked.view(-1, output_models_masked.size(-1)), Y_masked.view(-1))
-        loss = F.cross_entropy(output_models_masked, Y_masked)
+        loss = F.cross_entropy(outputModel.logits.view(-1, outputModel.logits.size(-1)), yb.view(-1))
+        # loss = F.cross_entropy(output_models_masked, Y_masked)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()

@@ -1,0 +1,51 @@
+import numpy as np
+
+from pynput import keyboard
+
+pressed_keys = list()
+force = 25
+
+
+def on_press(key):
+    global pressed_keys
+    if hasattr(key, 'char'):
+        pressed_keys.append(key.char)
+        pressed_keys = list(set(pressed_keys))
+
+
+def on_release(key):
+    global pressed_keys
+    if hasattr(key, 'char'):
+        pressed_keys.remove(key.char)
+
+
+listener = keyboard.Listener(
+    on_press=on_press,
+    on_release=on_release)
+listener.start()
+
+def parse_keys(keys, val):
+    command = np.zeros(8)
+    if 'i' in keys:
+        command[0:4] += val
+    if 'k' in keys:
+        command[0:4] -= val
+    if 'j' in keys:
+        command[[4, 7]] += val / 5
+        command[[5, 6]] -= val / 5
+    if 'l' in keys:
+        command[[4, 7]] -= val / 5
+        command[[5, 6]] += val / 5
+
+    if 'w' in keys:
+        command[4:8] += val
+    if 's' in keys:
+        command[4:8] -= val
+    if 'a' in keys:
+        command[[4, 6]] += val
+        command[[5, 7]] -= val
+    if 'd' in keys:
+        command[[4, 6]] -= val
+        command[[5, 7]] += val
+
+    return command
