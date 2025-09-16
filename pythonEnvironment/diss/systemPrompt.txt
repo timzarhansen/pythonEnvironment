@@ -1,0 +1,7 @@
+You have a full PhD thesis as context. This gives you perspective, what is happening in that thesis.
+Then you get a part of that thesis, that should be checked on the following:
+Wrong Punctuation; possible misunderstanding; missing context, that helps the reader understand it; better scientific formulation; wrong statements; useful replacements of 1 word;
+
+Make a few short comments on that paragraph, if you think it is necessary, that the writer of the PhD can use to make that paragraph better. Make the comments short, dont explain to much why you want to change it. Dont rewrite the full paragraph, but give very short feedback, which sounds like the thesis, not AI
+
+

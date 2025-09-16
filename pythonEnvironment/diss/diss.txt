@@ -1,0 +1,2159 @@
+\documentclass[12pt, a4paper, unicode]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{ifthen}     %% If then else
+\usepackage{verbatim}   %% For printing latex code
+\usepackage{lipsum}     %% For lorem ipsum sample text
+\usepackage{etoolbox}   %% Bibliography chapter to section
+\usepackage{multibbl}   %% Multiple bibliographies
+\usepackage{epigraph}   %% Adding text to part pages
+\usepackage{packages/epipart}    %% Custom code to add epigraph to part pages
+\usepackage{titletoc}   %% Multiple tables of content
+\usepackage{graphicx,import}   %% Sample images
+\usepackage{longtable}  %% Tables spanning more pages
+\usepackage{ragged2e}   %% Alignment of quotes
+\usepackage{pdfpages}
+\usepackage{caption}
+\usepackage{subcaption}
+
+%\usepackage{algorithmic}
+%% PACKAGES USED ONLY IN FOREWORD PAGE (SAFE TO DELETE)
+\usepackage{setspace}   %% Changing line height in foreword (delete this) 
+\usepackage{xcolor}     %% Changing the background color of foreword (delete this)
+\usepackage{afterpage}  %% Changing the color back (delete this)
+\usepackage{amsmath,amssymb}
+\usepackage{mathrsfs}
+\usepackage{txfonts}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+\usepackage{xparse}
+\usepackage{textcomp}
+\usepackage{multirow}
+\usepackage{geometry}
+
+
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{color}
+\usepackage{wasysym}
+\usepackage{bm}%% Hyperlinks to the beginning of the figure
+\usepackage[export]{adjustbox}
+
+\newgeometry{
+    top=1in,
+    bottom=1in,
+    outer=1in,
+    inner=1in,
+}
+
+
+% Epigraph on the full textwidth justified to the left
+% We use the epigraph in custom epipart.sty to display toc on \part page
+\setlength{\epigraphwidth}{\textwidth}
+\renewcommand{\epigraphflush}{flushleft}
+
+\newcommand{\smalltoc}[4]{
+% Custom command for easy creation of the partial table of content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% First argument is the identifier of the toc
+% Second argument is starting depth of the toc
+% Third argument is depth of the toc
+% Fourth argument is optional section* name
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contents of this toc is stopped automatically when
+% the next startcontent with the same name is issued.
+% To alter this, you can use \stopcontents[name] to
+% manually set what needs to be in your toc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \vspace{1pc}
+    \ifthenelse{\equal{#4}{}}{}{\section*{#4}}
+    \hrule\vspace{1pc}
+    \startcontents[#1]
+    \printcontents[#1]{}{#2}[#3]{}
+    \vspace{1pc}
+    \hrule
+    \vspace{1pc}
+}
+
+% Redefining the default behavior of Chapters in report 
+% to get rid of the "Chapter" line before chapter title
+% Comment this code if you do not like it
+\makeatletter
+\def\@makechapterhead#1{%
+    \vspace*{50\p@}%
+    {\parindent \z@ \raggedright \normalfont
+        \ifnum
+            \c@secnumdepth >\m@ne
+            %\huge\bfseries \@chapapp\space \thechapter
+            \Huge\bfseries \thechapter.\space%
+        %\par\nobreak
+        %\vskip 20\p@
+        \fi
+        \interlinepenalty\@M
+        \Huge \bfseries #1\par\nobreak
+        \vskip 20\p@
+    }}
+\makeatother
+
+% Removing the page number from parts in TOC + some spacing
+\titlecontents{part}[0em]{\vspace*{1.5em}\bfseries\Large}{}{}{}[\vspace*{0.5em}]
+
+% Changing spacing of the chapters in TOC (with dotted rule)
+% \titlecontents{chapter}[0em]{
+%     \vspace*{0.2em}\bfseries}{}{}{\titlerule*[9.2pt]{.}\contentspage}[\vspace*{0.1em}]
+
+% Changing spacing of the chapters in TOC (without dotted rule)
+\titlecontents{chapter}[0em]{
+    \vspace*{0.2em}\bfseries}{}{}{\hfill\contentspage}[\vspace*{0.1em}]
+
+% Document information
+\author{Tim Hansen}
+\title{\Huge{Affordable Sonar SLAM for Autonomous Underwater Vehicles: Advanced Perception, Comprehensive Validation, and Open-Source Implementation}\\
+\vspace{2pc}\large{first title }}
+\date{\the\year}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \maketitle
+
+    \includegraphics[width=0.4\textwidth,right]{figs/CU_Logotype_RGB_navy_blue_red} \\[2em]
+
+
+% Title and Author
+    \begin{center}
+%        \Large \textbf{Affordable Sonar SLAM for Autonomous Underwater Vehicles: Advanced Perception, Comprehensive Validation, and Open-Source Implementation} \\[2em]
+        \Large \textbf{towards open and affordable autonomous underwater vehicles (AUV): Simultanious localization and mapping(SLAM) as core component} \\[2em]
+        \normalsize by \\[1em]
+        \textbf{Tim Hansen} \\[3em]
+        a \textbf{Thesis} submitted in partial fulfillment \\
+        of the requirements for the degree of \\[1.5em]
+        \textbf{\LARGE Doctor of Philosophy} \\
+        \textbf{\large in Computer Science} \\[3em]
+    \end{center}
+
+% Committee
+    \begin{flushright}
+        \begin{minipage}{0.55\textwidth}
+            \textbf{Approved Dissertation Committee} \\[1.5em]
+            TestName1\\[-0.7em]
+            \rule{\linewidth}{0.4pt} \\[-0.5em]
+            \small Name and title of Chair \\[1.5em]
+
+            TestName2\\[-0.7em]
+            \rule{\linewidth}{0.4pt} \\[-0.5em]
+            \small Name and title of Committee Member \\[1.5em]
+
+            TestName3\\[-0.7em]
+            \rule{\linewidth}{0.4pt} \\[-0.5em]
+            \small Name and title of Committee Member \\[2em]
+        \end{minipage}
+    \end{flushright}
+
+% Date of Defense
+    \vfill
+    \noindent
+    \textbf{Date of Defense:} \\
+    \rule{0.6\textwidth}{0.4pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template foreword page (DELETE THIS)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\input{foreword(todelete)}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialization of TOCs, LOT, LOF & bibliographies
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Initialization of separate tables of contents for each part
+% because we want a different depth in each part of the main toc.
+    \startcontents[tocpart1] % TOC only containing items from Part 1
+    \startcontents[tocpart2] % TOC only containing items from Part 2
+    \stopcontents[tocpart2] % Stopping and resuming in Part 2
+    \startcontents[tocappendix] % TOC only containing items from Appendix
+    \stopcontents[tocappendix] % Stopping and resuming in Appendix
+
+% Initialization of separate bibliographies because we want
+% one bibliography for the first part and separate for each 
+% chapter of the second part.
+    \newbibliography{preamble}
+    \bibliographystyle{preamble}{unsrt}
+    \newbibliography{ch1}
+    \bibliographystyle{ch1}{unsrt}
+    \newbibliography{ch2}
+    \bibliographystyle{ch2}{unsrt}
+
+% Initialization of LOT (list of tables) and LOF (list of figures)
+    \startlist[lotpart1]{lot}
+    \startlist[lofpart1]{lof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying Abstract & Keywords page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \pagestyle{empty}
+
+    \section*{Abstract}
+    \lipsum[1]
+    \section*{Keywords}
+    keyword1, keyword2, keyword3
+    \clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying Acknowledgement page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \pagestyle{empty}
+
+    \section*{Acknowledgement}
+    \lipsum[1-3]
+
+    \textcolor{red}{
+    \begin{itemize}
+        \item Where did i do the PhD
+        \item Thank andreas
+        \item Thank colleques(Frede, bogdan, dan andrei, arturo, edyta)
+        \item Thank Daniel und Nathalie
+        \item Thank Friends, jonathan, philip, finn und
+        \item thank pets, Family, siblings, linda
+    \end{itemize}}
+
+
+% Signature
+    \vspace{5em}
+    \hfill
+    \begin{minipage}[t][][t]{16em}%
+        \begin{center}%
+            \dotfill \\
+            Author's signature
+        \end{center}%
+    \end{minipage}%
+    \clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% My Site
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \pagestyle{empty}
+    \vspace*{\fill}
+    \centerline{\textit{In the spirit of shared solidarity}}
+    \vspace{\fill}
+    \clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying main TOC (Table of Contents)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying merged tocpart1 and tocpart2 as one main TOC
+% Benefit of doing this is separate settings for each TOC
+    \printcontents[tocpart1]{}{-1}[2]{\chapter*{Contents}}
+    \clearpage
+    \printcontents[tocpart2]{}{-1}[0]{}
+    \printcontents[tocappendix]{}{-1}[0]{}
+    \thispagestyle{empty}   % turn off page numbering for TOC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying LOT (Lists of Tables)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \chapter*{List of Tables}
+    \thispagestyle{empty}   % turn off page numbering for LOT
+    \printlist[lotpart1]{lot}{}{}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Displaying LOF (List of Figures)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \chapter*{List of Figures}
+    \thispagestyle{empty}   % turn off page numbering for LOF
+    \printlist[lofpart1]{lof}{}{}{}
+
+    \cleardoublepage\pagestyle{plain}   % turning on the page numbering
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PART 1 PREAMBLE
+% In this part you can write an Introduction to your dissertation,
+% you can summarize all the publications which will be included
+% later on in full, and you can conclude your dissertation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% In this part, we want arabic numbering of chapters
+    \renewcommand\thechapter{\arabic{chapter}}
+
+    \epigraphhead{} % Use before parts without epigraph
+    \part*{Summary}
+    \addcontentsline{toc}{part}{Summary} % Add starred part to contents
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART 1 - CHAPTER 1
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    \chapter{Introduction}
+
+    Underwater robotics has been more important in recent years, due to the importance of the ocean when it comes to energy, security and research.
+    The importance of underwater surveillance robotics in the case of high security risks increases.
+    Marine research into climate modeling and bathymetry surveys require more precise sensor and robot platforms.
+    Additionally, maintenance of offshore wind power turbines asks for robot platforms to have a safe energy infrastructure for the future of energy systems.
+    Classical underwater robotics has the capacity to provide these services with expensive equipment and highly specialized professionals.
+    This approach increases the cost on energy, security and research.
+    Therefore, in recent years companies focus on lower-cost solutions, which require cheaper sensors and robot platforms, that do not require highly specialized professionals.
+    In academic research, more affordable underwater platforms still cost much more compared to the robotic research areas that includes aerial drones and terrestrial robotics.
+    Underwater robotics require water proof components, pressure resistance, corrosion resistence, and a different infrastructure in field trials.
+    Additionally, the sonar systems cost much more compared to a Global Navigation Satellite System\,(GNSS) antenna, cameras or a laser scanner.
+    Hence, the academic community on underwater robotics research is still small since the amount of research budget necessary to build these robot platforms together with a good infrastructure, including a lab facility with a specialized testing pool is high.
+
+    Another approach in recent years is to build very low-cost robot platforms, which are portable by persons, affordable for smaller research institutions, and use more affordable sensors.
+    The sensors used in low-cost robotic applications lack the accuracy and reliability of more expensive sensor equipment.
+    It is important to highlight the gap between low-cost sound based sensors, and low-cost camera sensors.
+    Well performing cameras are more than 10 times cheaper compared to a low-cost sonar sensor.
+    Another gap between the two areas lies in the fact that many methods developed for mobile robotic applications are not directly usable in the underwater domain.
+    The difference in velocity, accuracy in the sensors, type of sensors, and available ground truth require significant adaptations in the method to be usable underwater.
+
+
+    This thesis main contributions and focuses are four things:
+    \begin{itemize}
+        \item Affordable underwater robotics in challenging environments, with focus on the Valentin Bunker Memorial located in the north of Bremen, Germany.
+        \item Perception with low-cost sonars and its registration of different sonar scans based on a developed Fourier spectral based registration method.
+        \item Full SLAM methods, with a development of a front-end, for usage with the developed perception method and focus on real-time computation speed directly on the robot platform.
+        \item Open-source publishing of all developed methods, findings and datasets as a contribution to advance affordable underwater sonar perception.
+    \end{itemize}
+
+    The thesis is structured in a way, that it summarises the different publications in each chapter.
+    Every chapter focuses on one part of the contributions, described earlier.
+    In Chapter\,\ref{ch:low_cost}, the focus lies on the hardware challenges when it comes to low-cost underwater robotics.
+    On the example of the Valentin Bunker Memorial in Bremen, Germany, the challenges and possibilities are discussed, and preliminary results regarding the exploration in confined underwater environments without sonar systems are presented.
+    Chapter\,\ref{ch:registration} introduces the multimodal registration method Fourier-SOFT in 2D\,(FS2D), its advantages and limitations in the area of sonar registration.
+    Additionally, FS2D is used as a registration method with state-of-the-art SLAM for the first mapping in the Bunker Valentin Memorial in Section\,\ref{sec:exploration_flooded_basement}.
+    In Chapter\,\ref{ch:slam}, a new front-end is designed to improve the state-of-the-art SLAM, such that it utilizes the unique affordable sonar systems.
+    Additionally, the real-time capabilities are described and analyzed of the full SLAM framework.
+    In Chapter\,\ref{ch:open_source}, the design of the BlueAUV with its open-source software and available hardware is shown, which is a step towards affordable open underwater robotics.
+    Open data in underwater robotics is a challenge, which is tackled in Chapter\,\ref{ch:open_data}.
+    A dataset publication for 2D sonar SLAM is shown, where an accurate external positioning is used as the ground truth.
+    The last Chapter\,\ref{ch:conclusion} draws a conclusion and gives a possible direction for future work.
+
+    After the summary of the published work, all publication are listed, that are used throughout the thesis.
+    Each publication includes the bibliographic information and the copyright notice.
+
+
+
+    \chapter{Affordable Mobile Robotics in confined Underwater Spaces}\label{ch:low_cost}
+
+    Unmanned underwater vehicles\,(UUV) can be categorized into two different types with different purposes, remotely operated underwater vehicles\,(ROV), and autonomous underwater vehicles\,(AUV).
+    With increased interest in underwater vehicles, multiple different platforms were developed for specialized tasks.
+    While ROVs are mostly used by professionals to maintain, survey, or construct, AUVs are often used for underwater research, military purposes, and bathymetry surveys.
+    General purpose available examples of ROVs and AUVs are modified for the special purpose, and specific professional requirements.
+    The modification includes small changes to the software or additional hardware components, but require no vehicle redesign.
+
+    Custom robots, where general purpose robots can not be used are often developed for very specific tasks.
+    Robot fish\,\cite{preamble}{du2015robot,yu2004development} can be used for biological research to mimic fish behaviour.
+    Other bio inspired custom robots include a snake inspired robot\,\cite{preamble}{pettersen2017snake}, a manta based robot\,\cite{preamble}{hao2022course}, and an underwater legged robot\,\cite{preamble}{picardi2020bioinspired}.
+    Additionally, micro underwater vehicles\,($\mu$AUV) are increasingly adopted in research, because of its affordability and easier development with current prototyping techniques such as 3D printing and openly available middleware like the Robotic Operating System\,(ROS).
+    An example is the hippocampus platform\,\cite{preamble}{duecker2020hippocampusx}, where low-cost components are combined with 3D printing to develop a highly maneuverable $\mu$AUV.
+
+
+    Simultanious Localization and Mapping\,(SLAM) is a research topic which is widely published in various fields.
+    It is important for autonomous cars\,\cite{preamble}{singandhupe2019review,bresson2017simultaneous}, ground robots\,\cite{preamble}{su2021gr,wijayathunga2023challenges}, and on flying drones\,\cite{preamble}{gupta2022simultaneous,karam2022microdrone}.
+    In the case of non-underwater research, the perception of the environment makes use of cameras and laser scanners.
+    Cameras and lasers are the primary sensors, which result in algorithms, that use the properties of these sensors.
+
+
+    Poor underwater visibility with cameras and high noise in sonar measurements, which come from multi path sound and low spatial resolution, are underwater specific problems.
+    Thus, some method working on a flying drone cannot directly be applied to an underwater robotic platform.
+    An overview of localization strategies in complex and confined environments can be seen in\,\cite{preamble}{watson2020localisation}.
+
+    Here, the focus lies on SLAM for confined underwater environments.
+    When it comes to SLAM, the underwater domain has some advantages and disadvantages, compared to other domains.
+    One advantage is, that the depth can be easily measured with a depth sensor.
+    Additionally, most movement in the underwater domain are slower, which helps in the optimization of SLAM.
+    In contrast, the classical perception methods mostly rely on point cloud based data, which is different when it comes to sonar systems.
+    Sonars provide range and amplitude data as an array, and not direct 3D corresponding points in space.
+    This gap between classical SLAM applications, and underwater sonar SLAM applications result in multiple challenges when transferring these SLAM methods directly to the underwater domain.
+
+    The focus in this thesis lies on the development of sonar based SLAM applications with the use of affordable hardware, for sensing, computing, and navigation.
+    This chapter is a first step toward using affordable hardware in unknown confined environments, without any sonar system involved.
+    In the next section, a confined environment, that is used throughout this thesis as an example for SLAM applications is examined.
+    The environment has multiple challenges working with it, and demands a thought out methodology and planning to create an accurate map of that unknown confined environment.
+
+
+
+
+    \section{Confined Environment in the Valentin Bunker Memorial}\label{sec:valentin}
+
+    In the context of cultural heritage, the German Federal Ministry of Education and Research has an eHeritage program, which aims to create digital twins of important cultural buildings.
+    The submarine Bunker Valentin Memorial plays an important role in the World War II, and should be digitalized for historians to study.
+    The construction took place between 1943 and 1945 with massive use of forced laborers\,\cite{preamble}{CulturalHeritage-Valentin3D-DeGruyter22}.
+    It was intended by the German Navy to be the largest armament project, functioning as a submarine shipyard for producing Type-XXI submarines.
+    However, due to the end of the war, the bunker was never completed, and this plan never became a reality.
+    At its peak, up to 8,000 forced laborers worked on the site daily, many of whom lost their lives.
+    The bunker measures 426 meters in length, with a width that varies from 67 meters on the eastern side to 97 meters on the western side and heights of 30 to 33 meters.
+    With a total floor area of 35,375 square meters, it is the largest free-standing bunker in Germany and the second-largest in Europe.
+    The interior, protected by 7-meter-thick concrete floors and 4.5-meter-thick exterior walls, has a volume of 520,000 cubic meters.
+
+    \begin{figure}[!h]
+        \centering
+        \begin{subfigure}{.85\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/valentinBunker}
+            \caption{Aerial view of the Bunker Valentin Memorial}
+            \label{fig:bunkerValentinAll}
+        \end{subfigure}
+
+        \begin{subfigure}{.56\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/release_basin_valentin}
+            \caption{Release basin viewed from outside}
+            \label{fig:valentin-big-water}
+        \end{subfigure}
+        \begin{subfigure}{.280\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/entranceBasementCrop}
+            \caption{Access to the basement}
+            \label{fig:valentin-entrance}
+        \end{subfigure}
+        \caption[Bunker Valentin]{The Valentin Bunker Memorial, a submarine bunker build during WW-II by Nazi-Germany. In (b), the release basin for the submarines is visible, which is the entrance to the Weser. In (c), access to the basement, with an unknown confined underwater environment.}
+        \label{fig:valentin}
+    \end{figure}
+
+    The Bunker Valentin Memorial has two distinct bodies of water, which are interesting from the point of view of this thesis.
+    The first area is in the direction to the Weser river, where the submarines should have been released, Fig.\,\ref{fig:valentin-big-water}.
+    It has a size of 150 m $\times$ 10 m and is up to 10 meters deep.
+    The second area is in the basement of the bunker, seen in Fig.\,\ref{fig:valentin-entrance}, where only a small entrance of size 1 m $\times$ 1 m can be seen.
+    After the small entrance, the underwater area is reached, by moving down up to 3 m, with multiple turns, which were constructed to be stairs, posing navigation challenges.
+    We estimate the dimensions of the underwater area to approximately 30 m $\times$ 10 m, with a height of 2 m.
+    The basement can be seen as a confined area with limited access to the water surface, and limited knowledge of the area.
+    Hence, these characteristics make the Bunker Valentin Memorial an ideal testbed for field trials of low-cost underwater robotics in confined environments.
+    In Fig.\,\ref{fig:bunkerValentinAll} the Bunker Valentin can be seen in full.
+
+    In this thesis the BlueROV2 is used as the research vehicle.
+    It is an affordable ROV, which is highly modular, allowing sensors customizations and other extensions.
+    The BlueROV2 has 6 degrees of freedom and is connected with a cable to a computer, that can operate the BlueROV2.
+    The most important sensors are:
+    \begin{itemize}
+        \item Operating camera, positioned in the front direction, movable up and down, enables visual operation in clear environments.
+        \item Lasers to help during the navigation, and that can be used to measure the size of visible objects.
+        \item Doppler Velocity Log\,(DVL), for the measurement of the relative velocity to the ground.
+        \item Lights to illuminate the scene.
+        \item Pressure sensor for the measurement of the depth.
+        \item Mechanical Rotating Sonar\,(MSS) for the help in navigation and perception of the environment.
+    \end{itemize}
+
+
+
+    In Fig.\,\ref{fig:bluerov2} the BlueROV2 is seen with the attached laser, MSS, and DVL.
+    In Section\,\ref{sec:bluerov2} the BlueROV2 is described in more detail together with its sensor configuration, open-source software, and control system.
+
+    The next section examines the first paper focusing on the Bunker Valentin Memorial test site.
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=.5\linewidth]{figs/bluerov2laser}
+        \caption[BlueROV2 with an attached Laser]{The BlueROV2 with fully equipped sensors, together with an attatched laser, which is used in Section\,\ref{sec:brick_dating}.}
+        \label{fig:bluerov2}
+    \end{figure}
+
+    \section{Dating underwater brick sizes of the Valentin Bunker Memorial}\label{sec:brick_dating}
+
+
+    In the following the findings of the paper ``Dating Wall Constructions from Brick Sizes in the Flooded Basement of a WW-II Submarine Bunker for the Digitization of Cultural Heritage'' is summarised.
+    The paper aims to determine the construction date of bricks, which are part of a wall found in the basement of the Bunker Valentin.
+    We used the BlueROV2 to navigate in the difficult environment, and connected 4 red lasers as a structured light.
+    It shows, that using the BlueROV2 for navigation is possible, but still difficult.
+    The biggest challenge is, that in an area with low visibility and non visible water surface, to keep track of the surroundings.
+    Another challenge was the connection cable on the BlueROV2, which rubbed on the walls, and created friction, which results in difficult manoeuvrability.
+    The laser can be used to apply classical computer vision techniques to the visible camera frame, and compute the different ratios of the bricks inside the wall.
+    Bricks during WW-II and after the war have different aspect ratios.
+    Hence, the aspect ratio can be determined from the images and deside dependent on the aspect ratio if the bricks were constructed during, or after WW-II.
+
+    \begin{figure}[!h]
+        \centering
+        \begin{subfigure}{.2\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/LaserBricks-Code}
+        \end{subfigure}
+        \begin{subfigure}{.7\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/bunker-bricks-example}
+        \end{subfigure}
+        \caption[Processing pipeline for brick measurement]{Left: The processing pipeline to segment and measure each brick in the image. Middle: The image taken by the BlueROV2 during the exploration. The laser can be seen and is used to compute the brick sizes. Right: The resulting bricks marked in the image. The bricks show a high amount of variation.}
+        \label{fig:bricksfigure}
+    \end{figure}
+
+    The computer vision pipeline, developed in the research group, starts with a preprocessing stage, including rectification and adding Gaussian blur.
+    Afterwards, the image is converted from RGB to HSV, in order to locate the lasers inside the image.
+    Next, the homography matrix between the image and wall plane is found and the metrics of the laser are used to convert the pixels to mm, by the known spacing of the laser dots.
+    With the help of the Laplacian edge detection followed by the Hough transform, to detect straight lines, the individual bricks are identified.
+    In Fig.\,\ref{fig:bricksfigure} the computer vision pipeline and the brick wall detection can be seen.
+
+
+    In total, 7,393 bricks across 937 images were analyzed.
+    Brick standards provide a tool for dating structures and informing historians about the role that the Bunker Valentin played during WW-II.
+    Therefore, analyzing the format of the bricks in the images can infer the construction date of the wall.
+    From the bricks 81\% matched the ``Oldenburger Format'', which was the standard format pre-WW-II, which indicates the walls were likely build durin construction.
+    Additionally, it seems that the construction was rushed, because often broken and unspecified format bricks were used in this construction.
+    In general it is clear, that unrecorded modifications inside the bunker were done during construction.
+    Possible explanations include the built of shelters, as a result of air-raids, or problems with the materials due to shortages during construction.
+
+
+    In the paper it is demonstrated, that a simple laser system can be utilized to measure simple objects, without expensive sensors attached to the BlueROV2.
+    The BlueROV2 is capable to navigate in the area, after testing different settings on the sensors and having experience with the steering and controlling of the BlueROV2.
+    Additionally, the difficulties of field robotics in an unknown underwater environment are explored.
+    Operating the BlueROV2 in an underwater area, without seeing the surface is challenging and need experience with the operation.
+    Camera systems can be used to look ahead, yet, with a cluttered environment, the view is limited.
+    Hence, keeping track of the environment around the robot without any walls being visible creates risks of loosing the orientation.
+    The lasers for the measurements of the bricks help to navigate in the environment, because walls are visible earlier.
+    Using a configurable cheap sonar for navigation can help the operator to keep track of the orientation of the robot.
+    When sophisticated navigation and operations are performed, creating a map in real-time during operation can make the operation less risky and more successful.
+    In the next section, a first mapping system is developed to robustly map an unknown underwater environment.
+
+
+
+
+
+    \chapter{Multimodal Registration of low cost Sonar Scans for SLAM}\label{ch:registration}
+
+
+    While the BlueROV2 can be used in challenging environments, and be used in different scenarios, the main focus in this thesis is simultaneous localization and mapping\,(SLAM) with affordable mechanical scanning sonars\,(MSS).
+    A sonar can sense in cluttered environments and do not suffer as much from difficult confined areas, compared to cameras\,\cite{preamble}{zhou2023underwater}.
+    The downsides are, that the scanning speed is very low, and the accuracy is limited dependent on the wavelength and speed of sound.
+    Additionally, the noise induced by sound compared to light is high\,\cite{preamble}{SonarBook-MarageMori13,SonarBook-Lurton10,SonarBook-Hodges10}, due to properties of wave propagation, multi-paths and different speed of sound in objects.
+    A sonar scan is created by multiple measurements of the mechanically rotating sonar head.
+    The list of measurements is associated with the position of the robot at that time, which is estimated by other sensors e.g. IMU and DVL, and a state estimator, e.g.\,a Kalman Filter.
+    A sonar image can be rendered by creating a 2D image with a motion compensation, that uses the estimated 2D robot position and renders the sound ray in 2D space.
+    The sonar image can then be seen as a view from top on the environment.
+    In Fig.\,\ref{fig:motionCompensationExample} both, an illustration of a mechanical scanning sonar and a resulting real sonar image is depicted, when the sonar is stationary.
+
+    \begin{figure}[!h]
+        \centering
+        \begin{subfigure}{.4\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/fs2D/sonarExampleRotation.pdf}
+            \caption{sonar image}
+            \label{fig:motionCompensationExample_left}
+        \end{subfigure}
+        \begin{subfigure}{.4\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/fs2D/voxelDataforMotionCompensation}
+            \caption{sonar}
+            \label{fig:motionCompensationExample_right}
+        \end{subfigure}
+        \caption[Rendering of a sonar image]{The resulting sonar image of rendering in a 2D grid\,(right). Illustration of a mechanical scanning sonar with a rotating head\,(left). The image is a top view on the perceived environment.}
+        \label{fig:motionCompensationExample}
+    \end{figure}
+
+
+    Robust registration methods are necessary to compute the transformational difference between two different sonar scans.
+    This registration can then be used for more complex SLAM systems, or for navigation purposes.
+    Classical registration methods, mostly based on Iterative Closest Points\,(ICP)\,\cite{preamble}{ScanMatching-NewMetricICP-ITRO06,ICPcomparisons-AuRo13,EfficientVariantsICP-3DDIM01}, are using points.
+    In the case of sonar measurements, the data structure are essentially arrays of echos that need to be converted into points, to be used with ICP approaches, which needs some heuristic to create points out of the echo.
+    This removes information from the sonar dataset, which might be essential for the registration to be successful.
+    Additionally, robustness against noise in ICP methods is low.
+    Therefore, a lot of research is done in making ICP methods more robust\,\cite{preamble}{zhang2021fast,du2015probability,du2016new,bouaziz2013sparse}.
+    Still, classical methods demonstrate insufficient robustness to handle the different data produced by low-cost MSS.
+
+    More modern methods, which include machine learning methods, need data to train models, in order to be useful for registration.
+    In the underwater domain, as described earlier, datasets are not always available for every sensor and environment type.
+    The problems of providing ground truth, and the different sonar sensor options, make datasets for specialized tasks rare.
+    All of it makes machine learning difficult to perform.
+    Additionally, affordable MSSs are less used in academia, due to it high noise and slow scanning speed.
+    Another way to registrate the sonar scans is to use classical computer vision techniques.
+    Examples use many different methods to compute a 2D registration\,\cite{preamble}{ImagingSonarScanMatch-FeatureBased-TIM22,SonarScanMatch-ParticleFilterSLAM-Systems20,SonarScanMatch-SMC19,SonarScanMatch-PoseGraphSLAM-RAL17,SonarScanMatch-IntelliSys17,Hurtos-FMI-Registration-JFR15,ScanMatchingSLAM-UnderwaterGirona-AuRo14,ImagingSonar-RegistrationComparison-Oceans13,Sparus-MappingNavigation-Oceans11,UnderwaterSonar-ProbScanMatch-ICRA09,UnderwaterSonar-SLAM-OCEANS09,IAV10-Sonar-iFMI,AUV-SLAM-PartiallyStructuredEnv06}.
+
+    All the methods above are usable in a way, that one solution is computed for each scan pair.
+    Which means, that if that solution is not correct, it can lead to difficult estimation problems of the back-end of the SLAM algorithm.
+    When a lot of noise is in the sonar image, or repetitive structures are visible in the sonar scan, it can be useful to have multiple solutions, where e.g.\,later inside the optimization of SLAM is decided, which is the best solution.
+    Therefore, this multimodality has the potential to increase the robustness of the whole SLAM algorithm.
+    Currently, this multimodality is not well exploited in modern SLAM applications.
+    In\,\cite{preamble}{8793854} MH-iSAM2, an extension of iSAM2\,\cite{preamble}{iSAM2-ICRA11} is a first direction towards multi hypothesis SLAM applications.
+
+    To exploit this improvement in SLAM applications, registration methods need to provide the additional information to the optimization.
+    The Fourier Mellin SOFT registration\,(FMS)\,\cite{preamble}{7-DoF-registration-ICRA11}, a 7-DOF, 6-DOF and scale, registration method for 3D scans offers a global multimodal registration.
+    While this 3D registration could be used for 2D sonar scans, significant adaptations must be made to be usable in a real-time SLAM setup.
+    Additionally, the robustness needs to be better understood, and field trial data is needed to validate its capability and performance under environmental noise and influences.
+    In the next two sections the 2D version of FMS, is first described, and second the usage of the scan registration method is used for the exploration and first SLAM results of the Bunker Valentin Memorial.
+    Both sections are based on papers that were published.
+
+
+
+    \section{Fourier-SOFT in 2D}\label{sec:fs2d}
+
+    In this section the Fourier-SOFT in 2D\,(FS2D) registration is introduced, based on the publication ``Using Registration with Fourier-SOFT in 2D (FS2D) for Robust Scan Matching of Sonar Range Data''\,\ref{paper:fs2d}.
+    FS2D is a robust multimodal registration method, which uses the frequency domain, together with a spherical projection, to solve the rotation alignment of noisy underwater 2D sonar scans.
+    Multimodal in a sense, that multiple potential solutions can be computed and weighted with a matching score.
+    FS2D exploits the decoupling of translation and rotation in the frequency domain.
+    This property enables robust rotation estimation, independent of the translational shifts, which is addressed later.
+    Consider a function $f(\mathbf{x})$ rotated by a transformation $g(\alpha,\beta,\gamma)$.
+    The Fourier magnitude $|\tilde{F}(\mathbf{k})|$ of function $\tilde{f}(\mathbf{x})=g(\alpha,\beta,\gamma)f(\mathbf{x})$ is $|\tilde{F}(\mathbf{k})| =|F(g(\alpha,\beta,\gamma)\mathbf{k})|$, where the capital letter denotes the function in the frequency domain.
+    In the frequency domain the rotation matrix only acts on $\mathbf{k}$, and not on the full function.
+
+
+    \begin{figure*}[!ht]
+        \centering
+        \begin{subfigure}{.205\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/voxelData1}
+            %\caption{Correlation of the highest match.}
+        \end{subfigure}
+        \begin{subfigure}{.205\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/magnitudeScan1}
+            %\caption{Correlation of the highest match.}
+        \end{subfigure}
+        \begin{subfigure}{.28\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/resampledDataForSphereResult1-B}
+            %\caption{Correlation of the highest match.}
+        \end{subfigure}
+        \begin{subfigure}{.24\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/resultingCorrelation1DAngle}
+            %\caption{Correlation of the highest match.}
+        \end{subfigure}
+
+        \begin{subfigure}{.205\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/voxelData2}
+            \caption{Two sonar scans $f_1, f_2$ as 2D arrays}
+        \end{subfigure}
+        \begin{subfigure}{.205\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/magnitudeScan2}
+            \caption{The related magnitudes $|F_1|, |F_2|$ of the scans}
+        \end{subfigure}
+        \begin{subfigure}{.28\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/resampledDataForSphereResult2-B}
+            \caption{Resampled Magnitudes on $ \mathbb{S}^2 $}
+        \end{subfigure}
+        \begin{subfigure}{.24\textwidth}
+            \centering
+            %\def\svgwidth{1.0\textwidth}
+            %\input{figures/2dCorrelation.pdf}
+            \includegraphics[width=0.95\linewidth]{figs/fs2D/matchedPointcloudsAll}
+            \caption{Multiple peaks from the SOFT and the related scan alignments below}
+        \end{subfigure}
+
+        \caption[Full FS2D registration]{A simple illustrative registration example with two scans and minor motion between them. There are multiple peaks in the end for the angle determination where the highest one, here close to Zero, respectively $2\pi$, indicates the correct solution. If an initial guess is given, it can be used, e.g., the best peak from each of the corresponding translation correlations can be used to select the best fitting solution.}
+        \label{fig:fs2d_registration}
+    \end{figure*}
+
+
+    The registration method is shortly summarized in the following.
+    Follow the Fig.\,\ref{fig:fs2d_registration} for each individual step.
+    Suppose function $f(\mathbf{x})$ with $\mathbf{x} = {[x , y]}^{T}$, which corresponds to a 2D discrete function of size $N \times N$.
+    The corresponding function in the frequency domain is then $F(\mathbf{k})$ with the frequency coordinates $\mathbf{k} = {[u , v]}^{T}$.
+    The core idea is to project the spectral magnitude $|\tilde{F}(\mathbf{k})|$ in the frequency domain onto a sphere $\omega(\theta,\phi) \in \varmathbb{S}^{2}$, by putting the 2D image on the equator plane of the sphere, and projecting the image perpendicular to the poles of the sphere.
+    The resampling process is done in the following way:
+
+    \begin{align}
+        f_{\varmathbb{S}^{2}}(\theta,\phi) &= \sum^{2B-1}_{j=0} \sum^{2B-1}_{k=0}|F(\mathbf{k})|\\
+        \mathbf{k}&=\begin{bmatrix}
+                        u \\
+                        v
+        \end{bmatrix}=
+        \begin{bmatrix}
+            r\sin{\theta}\cos{\phi}+N/2 \\
+            r\sin{\theta}\sin{\phi}+N/2
+        \end{bmatrix}\\
+        \phi &= \frac{\pi \phi_k}{B};  \theta = \frac{\pi\theta_j}{2B}\\
+        \phi_k &= 0,...,2B-1; \theta_j = 0,...,2B-1
+    \end{align}
+    In this resampling process $B=N/2$ describes the bandwidth, and $r= N/2-1$ the radius of the sphere,
+
+    After the projection, the sphere is processed with Contrast Limited Adaptive Histogram Equalization\,(CLAHE)\,\cite{preamble}{Zuiderveld1994}, to equalize amplitudes on the sphere, and later increase peak significance of the rotation correlation.
+    Next, the SO(3) Fourier transform\,(SOFT)\,\cite{preamble}{FFTsOnTheRotationGroup-Journal08} is used to compute the rotation correlation between two spherical projections of two sonar scans.
+    In the 2D registration case, only the rotation correlation around the yaw axis is of interest.
+    Hence, in using SOFT, a correlation between the two scans for angles between 0 and $2\pi$ is computed, which is discretized at a resolution determined by $N$.
+    On the resulting correlation, a peak detection\,\cite{preamble}{peakDetection2DTopology} is used to determine potential rotations.
+    For each peak, a translation correlation of the rotated scan with the help of the Fourier transform cross-correlation can be computed.
+    Based on the correlation height, or on some initial guess, e.g. based on navigation knowledge, the registration result can be used as a basis for robust SLAM or other applications.
+    It is important to highlight, that the multimodal registration results can be beneficial for optimization methods, that exploit multiple solutions.
+    The FS2D registration method only needs $N$ to be chosen, which is a trade-off between accuracy and computation speed.
+
+    It is clear that the number of significant rotation peaks are directly dependent on the environment.
+    When two square scans are used, there will be four peaks in the rotation correlation, due to their 90$^{\circ}$ symmetrical properties.
+    Therefore, when using an initial guess for the rotation estimation, there is a risk that the initial guess error is too high and the registration converges to a local minimum.
+    Hence, it needs to be taken into account, when using initial guess, or environments with special characteristics.
+
+    Another aspect is, that FS2D has a fixed computation time, since no iteration and optimization is used to compute the solution.
+    That can be beneficial in scenarios, where the computation times are strictly constrained.
+
+    In the paper, a comparison between different registration methods was performed on multiple datasets, which are recordings of mechanical scanning sonars in unknown environment.
+    The datasets are used to generate scan pairs, based on a baseline sonar scan.
+    The copied scan pairs are used to add noise, occlusions and an artificial random transformation to the original and the copy, to emulate real-world sensor noise and environmental occlusions.
+    This helps to generate a pseudo ground truth dataset to test the registration methods.
+    The methods outside FS2D are, GICP\,\cite{preamble}{segal2009generalized}, Super4PCS\,\cite{preamble}{mellado2014super}, NDT D2D\,\cite{preamble}{stoyanov2012fast} and NDT P2D\,\cite{preamble}{magnusson2007scan}.
+    Additionally, the FS2D method were performed with an initial guess, and as a global registration method, without any known initial pose, with $N=64$ and $N=256$.
+
+    \begin{table*}
+        \caption[Experimentation results of FS2D Registration]{Results of the experiments to test robustness with\,(A) noise,\,(B) larger motion, and\,(C) consecutive scans with occlusions and realistic noise and motions of a BlueROV2 with a Ping360 sonar.}
+        \label{tab:robust_table_results}
+        \begin{center}
+            \resizebox{1.0\textwidth}{!}{% <------ Don't forget this %
+                \begin{tabular}{|c|c|c|c||c|c||c|c||c|c|}
+                    \hline
+                    \multirow{2}{*}{\shortstack{Dataset \\ mean $\pm$ std}} & &  \multirow{2}{*}{ \shortstack{GICP} }& \multirow{2}{*}{ \shortstack{Super4PCS} } & \multicolumn{2}{c||}{NDT} & \multicolumn{2}{c||}{FS2D} & \multicolumn{2}{c|}{global FS2D}\\ [0.5ex]
+                    \cline{5-10}
+                    & &  &  & D2D 2D & P2D &  64 &  256 &  64  & 256 \\ [0.5ex]
+                    \hline\hline
+                    \multirow{3}{*}{ \shortstack{(A)\,Noise \\ Bunker Valentin  } }& Error Angle in$^{\circ}$ & $2.4 \pm  1.5$ & $3.2 \pm  9.7$& $4 \pm  21$& $1.4 \pm  3.4$& $1.7 \pm  0.93$& $\mathbf{0.4} \pm  \mathbf{0.3}$&$1.7 \pm  2.4$ & $0.44 \pm  0.3$ \\
+                    \cline{2-10}
+                    & Error L2 Norm in m & $1.4 \pm  0.6$ &$ 0.6 \pm  0.6$ & $0.4 \pm  1$& $0.4 \pm  0.8$& $0.5 \pm  0.3$& $\mathbf{0.1} \pm  \mathbf{0.05}$&$0.5 \pm  0.3$ & $0.1 \pm  0.05$ \\
+                    \cline{2-10}
+                    & Computation Time in ms& $\mathbf{7.8} \pm  \mathbf{3.7}$ & $3090 \pm  4002$& $20 \pm  11$& $335 \pm  378$& $11 \pm  1.5$& $1337 \pm  24$&$12 \pm  1.4$ & $1344 \pm  25$  \\
+                    \hline\hline
+                    \multirow{3}{*}{\shortstack{(A)\,Noise \\ Fluvia Nautic  }}& Error Angle in$^{\circ}$ & $2.1 \pm  1.3$ & $2 \pm  5.7$& $0.7 \pm  5.7$& $1.2 \pm  1.4$& $1.7 \pm  0.95$& $\mathbf{0.6} \pm  \mathbf{0.6}$&$1.7 \pm  2.1$ & $0.6 \pm  0.6$ \\
+                    \cline{2-10}
+                    & Error L2 Norm in m & $1.4 \pm  0.6$ &$2 \pm  2.7$ & $0.32 \pm  1.2$& $0.33 \pm  0.77$& $0.97 \pm  0.55$& $\mathbf{0.29} \pm  \mathbf{0.28}$&$0.97 \pm  0.6$ & $0.29 \pm  0.28$ \\
+                    \cline{2-10}
+                    & Computation Time in ms& $\mathbf{9.5} \pm  \mathbf{4.7}$ & $1713 \pm  1043$& $31 \pm  9.9$& $328 \pm  335$& $12 \pm  1.1$& $1360 \pm  66$&$12 \pm  1.1$ & $1368 \pm  66$  \\
+                    \hline\hline
+                    \multirow{3}{*}{\shortstack{(B)\,Larger Motion \\Bunker Valentin  }}& Error Angle in$^{\circ}$ & $7.9 \pm  5.3$ & $1.6 \pm  12$& $49 \pm  66$& $13 \pm  26$& $1.5 \pm  0.95$& $0.4 \pm  0.26$&$1.5 \pm  0.95$ & $\mathbf{0.4} \pm  \mathbf{0.26}$\\
+                    \cline{2-10}
+                    & Error L2 Norm in m & $7.5 \pm  3$ &$1.7 \pm  73$ & $6.3 \pm  6.9$& $6.9 \pm  5.9$& $2.7 \pm  4.6$& $3 \pm  5.2$&$0.6 \pm  0.3$ & $\mathbf{0.13} \pm  \mathbf{0.07}$ \\
+                    \cline{2-10}
+                    & Computation Time in ms& $\mathbf{9.7} \pm  \mathbf{9.4}$ & $1522 \pm  3486$& $28 \pm  18$& $494 \pm  507$& $12 \pm  1.4$& $1427 \pm  58$&$13 \pm  1.5$ & $1450 \pm  58$  \\
+                    \hline\hline
+                    \multirow{3}{*}{\shortstack{(B)\,Larger Motion \\ Fluvia Nautic }}& Error Angle in$^{\circ}$ & $7.5 \pm  4.5$ & $1.3 \pm  11$& $17 \pm  40$& $5.9 \pm  11$& $1.8 \pm  1.7$& $\mathbf{0.9} \pm  \mathbf{1.4}$&$3.8 \pm  17$ & $1.1 \pm  5.8$ \\
+                    \cline{2-10}
+                    & Error L2 Norm in m & $7.6 \pm  2.9$ &$9.3 \pm  797$ & $4.7 \pm  9.4$& $4.6 \pm  5.7$& $1.7 \pm  2.3$& $1.3 \pm  3.4$&$1.8 \pm  2.7$ & $\mathbf{0.6} \pm  \mathbf{1.3}$ \\
+                    \cline{2-10}
+                    & Computation Time in ms& $26 \pm  26$ & $19070 \pm  43260$& $66 \pm  42$& $1213 \pm  1093$& $\mathbf{11} \pm  \mathbf{1.5}$& $1327 \pm  64$&$12 \pm  1.2$ & $1335 \pm  62$  \\
+                    \hline\hline
+                    \multirow{3}{*}{\shortstack{(C)\,Consecutive \\Scans\,(Gazebo) }}& Error Angle in$^{\circ}$ & $2.2 \pm  2.6$ & $41 \pm  59$& $8.6 \pm  22$& $31 \pm  30$& $2 \pm  1.6$& $\mathbf{1} \pm  \mathbf{0.76}$&$45 \pm  64$ & $26 \pm  57$ \\
+                    \cline{2-10}
+                    & Error L2 Norm in m & $0.56 \pm  0.4$ &$5.3 \pm  5.3$ & $2.1 \pm  3.7$& $4.8 \pm  4.2$& $1.8 \pm  2.3$& $\mathbf{0.53} \pm  \mathbf{0.45}$&$5.3 \pm  6.4$ & $2.9 \pm  5.2$ \\
+                    \cline{2-10}
+                    & Computation Time in ms& $\mathbf{7.3} \pm  \mathbf{3.5}$ & $58430 \pm  154500$& $6.5 \pm  3.5$& $284 \pm  204$& $11 \pm  1.1$& $1347 \pm  24$&$13 \pm  1.2$ & $1391 \pm  27$ \\
+                    \hline
+                \end{tabular}
+            }% <------ Don't forget this %
+        \end{center}
+    \end{table*}
+
+    In Tab.\,\ref{tab:robust_table_results}, an excerpt of the publication is shown.
+    Here, classical added noise, larger transformation differences and added occlusions were used to see the robustness on the different registration methods.
+    It can be seen, that FS2D is the most robust out of all the methods.
+    The downside is, that the computation cost is higher.
+    Especially with $N=256$ FS2D requires more than 1.3 seconds to compute.
+    Recording a full scan with the sonar used in the experiments takes more than 20 seconds, which is significantly more.
+    It is also important to highlight, that global registration methods are better suited for larger transformation differences compared to methods needing an initial guess transformation.
+
+    \begin{figure*}
+        \centering
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/ValentinGICP}
+            \caption{GICP}
+        \end{subfigure}
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/ValentinSUPER}
+            \caption{Super4PCS}
+        \end{subfigure}
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/ValentinNDTD2D}
+            \caption{NDT D2D}
+        \end{subfigure}
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/ValentinNDTP2D}
+            \caption{NDT P2D}
+        \end{subfigure}
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/ValentinourGlobal256map}
+            \caption{FS2D Global}
+        \end{subfigure}
+        \begin{subfigure}{.155\textwidth}
+            \centering
+            \includegraphics[width=0.98\linewidth]{figs/fs2D/Valentinour256map}
+            \caption{FS2D}
+        \end{subfigure}
+        \caption[Valentin Bunker maps generated by consecutive FS2D registration]{The maps generated by the different methods with consecutive registration of 30 scans from the real world Valentin dataset. The FS2D registration leads again to a result that is closest to actual environment in form of a rectangular basin of size 150\,m $\times$ 10\,m.}
+        \label{fig:mapsOfAllMethodsValentin}
+    \end{figure*}
+
+    In Fig.\,\ref{fig:mapsOfAllMethodsValentin} maps of consecutive scans, without any SLAM optimization are shown.
+    Each scan was registered with the help of an initial guess based on a simple navigation Kalman filter, except the global methods, which do not require initial guesses.
+    The resulting estimated registration transformation was used to create the map.
+    Visually inspecting the results shows that only FS2D and FS2D Global are creating a map with straight boundaries.
+    This aligns with the release basin in the Valentin Bunker Memorial, which has a straight wall on one side.
+    In the other maps, the outline can be seen, but they are very distorted, which shows, that these methods are having more difficulties in mapping the area.
+
+    The results show that FS2D can be a viable alternative to classical point-based registration methods, to compute the transformation between two distinct sonar scans.
+    Additionally, it offers the possibility to have multiple solutions to one scan pair, after which the most fitting transformation can be chosen.
+    One potential future direction of this publication is accelerating the computation speed of the registration, using GPUs with an implementation of SOFT together with hardware acceleration.
+    Second, the registration method should be used in a full SLAM system, to test its capabilities in real-world scenarios.
+    In the next section, the first publication towards affordable underwater sonar SLAM is shown.
+
+
+
+
+    \section{Exploration of flooded Bunker Valentin Memorial Basement with SLAM}\label{sec:exploration_flooded_basement}
+
+    In this section, the registration method Fourier-SOFT in 2D\,(FS2D) from the last section is used to explore the basement of the Bunker Valentin with the help of SLAM, and building on results from the publication ``Underwater Exploration with Sonar of the Flooded Basement of a WW-II Submarine Bunker in the Context of the Digitization of Cultural Heritage''\,\ref{paper:underwater_exploration}.
+    As described earlier in this thesis, the Bunker Valentin Memorial has multiple areas, where underwater mapping can be applied.
+    Here, the focus lies on the exploration of the basement while creating a map of the environment, in order to gain insights into the construction during WW-II, which is interesting for historians.
+    For the mapping of the area Simultaneous Localization and Mapping\,(SLAM) is used.
+
+    The difficult in SLAM is, that the surroundings and the position in that surrounding has to be estimated at the same time.
+    Hence, they are directly dependent on each other.
+    Most applications split the SLAM system in two modules.
+    The first module is the front-end, which manages the perception of the environment and uses the raw sensor measurement for that.
+    The second module is the back-end, which uses the sensor information, provided by the front-end, and optimizes the measurements to create a map and position.
+    Most information flows from the front-end to the back-end, but also back-end optimization results can be used by the front-end.
+    In the past, the back-end optimization was based on Kalman filter\,\cite{preamble}{bailey2006consistencyekf,paz2008divide}, or particle filter\,\cite{preamble}{grisetti2007fast,bailey2006consistencyparticle}.
+
+    More recent back-ends are mostly based on graph based optimization methods\,\cite{preamble}{grisetti2011tutorial,dellaert2017factor}.
+    Graph based techniques capture the full SLAM problem, which means all previous measurements, are taken into account for the optimization.
+    In filtering techniques only the current measurements are used to update the filter states.
+    Classical pose graphs are graphs, that consist of nodes and edges.
+    A node represents a state, e.g the pose of the robot, in the graph, and the edges the connection and constraints between these nodes.
+    Then the graph is optimized based on the constraining edges between the nodes.
+    Factor graphs are a generalization pose graphs, where factors are used to optimize the poses of the SLAM system.
+    The most popular algorithm for the optimization of factor graphs is the ISAM2\,\cite{preamble}{Kaess2012isam2} algorithm, together with the GTSAM library\,\cite{preamble}{gtsam}.
+
+    In the underwater area, two main sensors for SLAM can be used, namely cameras and sonars.
+    Cameras need good illumination, an environment, where objects are visible and distinguishable, and good water quality.
+    On the other hand, cameras offer a good resolution, with the ability to detect the full environment.
+    Sonars are robust against bad water quality, and do not need any illumination.
+    Additionally, they can detect the environment over larger distances, compared to cameras.
+    The speed of sound in water is roughly 1500\,m/s, dependent on salinity, pressure and temperature, which is very slow compare to light.
+    Therefore, the measurement speed is slower, and the measured distance has a big influence on the scanning speed.
+    The spacial resolution of sonars are very low, and the noise, e.g. from multi paths of the sound, result in cluttered sonar scans.
+    Additionally, simple sonars only measure the intensity, which makes identifying objects even more difficult.
+
+    \begin{figure*}
+        \centering
+        \includegraphics[width=.32\linewidth]{figs/underwaterExploration/frame17695-B}
+        \includegraphics[width=.32\linewidth]{figs/underwaterExploration/frame18019-B}
+        \includegraphics[width=.32\linewidth]{figs/underwaterExploration/frame19847-B}
+        \caption[Examples of distorted sonar measurements]{Three examples of the raw scans from the Ping360 scanning sonar. There are high amount of noise and distortions due to the motion of the robot during the scanning.}
+        \label{fig:raw_scans}
+    \end{figure*}
+
+    For the mapping, the BlueROV2 described in Section\,\ref{sec:bluerov2} is used.
+    The sensors of interest for mapping the environment are the Ping360\,\cite{preamble}{ping360}, and the compact WaterLinked A50 Doppler Velocity Log\,(DVL)\,\cite{preamble}{a50dvl}.
+    Additionally, the Xsens MTi-300 IMU\,\cite{preamble}{MTi-300-IMU-www23} and a pressure sensor are used for enhanced odometry estimation.
+    Raw scans of the Ping360 are illustrated in Fig.\,\ref{fig:raw_scans}.
+    The scans are noisy and significantly distorted due to the motion of the vehicle during scanning.
+    Therefore, a motion compensation is applied, based on the measurements of the DVL together with the IMU and pressure sensor, combined via an extended Kalman filter\,(EKF) to undistort the sonar scans.
+    After the motion compensation, each scan can then be used to create a map of the environment with the help of SLAM.
+
+    For the mapping of the environment, state-of-the-art graph based SLAM is employed.
+    Each consecutive scan is registered with FS2D, and a graph is created, which includes the navigation estimate by the EKF, and the registration result from FS2D.
+    The graph is built and optimized by the popular ISAM2\,\cite{preamble}{Kaess2012isam2}, which is a factor graph optimization, implemented with the GTSAM library\,\cite{preamble}{gtsam}.
+    Loop closures are created by a simple strategy, where based on the proximity and uncertainty heuristic, a loop closure is performed, which reduces the uncertainty of the robots pose.
+    The computation time is low enough to be computed on the Raspberry Pi 4, when a low $N=64$ for the FS2D registration is used.
+    For the resulting map, in the post processing, presented here, $N=512$ is chosen, to be more accurate.
+
+
+
+    \begin{figure*}
+        \centering
+        \includegraphics[width=\linewidth]{figs/underwaterExploration/basement-sonar-map-C}
+        \caption[Map of flooded Valentin Bunker basement]{Map of a large room in the flooded basement generated from 20,406 consecutive measurements with a Ping360 sonar on a BlueROV.}
+        \label{fig:basement_map}
+    \end{figure*}
+
+    As described in Section\,\ref{sec:brick_dating}, the entrance is very small, see Fig.\,\ref{fig:valentin-entrance}, and navigating is only possible by viewing the live sonar data from the base station.
+    Each trial was roughly 30 minutes long, so that the BlueROV2 still has charge left in case of problems during the trial.
+    During one trial, 48 fully motion compensated scans were recorded, with 20,406 individual sonar measurements.
+    In Fig.\,\ref{fig:basement_map} the resulting map of one trial is shown.
+    The room is approximately 34\,m long, 7\,m wide and has a height of 2.5\,m.
+
+    The map includes also the brick structure, which was part of Section\,\ref{sec:brick_dating}, and it is visible, that on the right and left side of the map, entrances to other parts of the bunker appear.
+    It can give clues about the difference areas in the basement of the Bunker Valentin Memorial, which is interesting for historians.
+    Moving to these areas is difficult due to the cable that is connected to the BlueROV2.
+    Exploring to other non-visible areas, that are not captured by the sonar, is left for future work.
+    In general, these initial experiments demonstrate, that a SLAM system is possible in a confined difficult environment with the FS2D registration.
+    Additionally, low-cost sensors are good enough to create an approximate map of the environment, and demonstrates the robustness of the system.
+
+
+    \chapter{Improving SLAM with Synthetic Scan Formation}\label{ch:slam}
+
+    In Section\,\ref{sec:exploration_flooded_basement}, first results of a SLAM system with FS2D, the registration method from Section\,\ref{sec:fs2d} are shown.
+    SLAM enables mobile robotic systems to localize themselves in unknown environments.
+
+    In this chapter, the focus lies on the development of improving a working SLAM system for the usage in confined underwater environments.
+    More precisely, the goal is to develop an improved SLAM system, which considers the unique characteristics of affordable mechanical scanning sonar\,(MSS), which is one of the cheapest sonar types available.
+    An MSS consists of a transducer, which forms a single beam in one direction, where the time-of-flight is used to compute an intensity array.
+    The transducer is rotating $360^{\circ}$ around one axis and measures in these directions.
+    The BlueRobotics Ping360\,\cite{preamble}{ping360} needs 35 sec for a full scan with 50\,m range.
+
+
+    Examples of 2D sonar SLAM in recent years include\,\cite{preamble}{UnderwaterSLAM-MSS-ICUS22,SonarScanMatch-ParticleFilterSLAM-Systems20,SonarSLAM-MSS-LoopClosure-IEEEAccess19,Underwater-MSS-registration-JEI19,Underwater-MSS-SLAM-RAS14,UnderwaterSLAM-MSS-IROS11,Sparus-MappingNavigation-Oceans11,IAV10-Sonar-iFMI,UnderwaterSLAM-MSS-IROS10,UnderwaterSonar-SLAM-OCEANS09,UnderwaterSonar-ProbScanMatch-ICRA09,RibasEtal-UnderwaterSLAM-JFR08,AUV-SLAM-Harbor07}.
+    The approaches in the examples include filter and graph based back-end optimization techniques.
+    Often a modified variant of the ICP\,\cite{preamble}{segal2009generalized} algorithm is used, due to the lack of robustness of ICP, which is necessary due to inherent noise in sonar data.
+    Therefore, all SLAM methods have different approaches on the front-end, such as how the 2D sonar data is used to make associations between different sonar scans.
+    Long term robust mapping with low-cost 2D sonars is still a challenging problem.
+
+    In this chapter, FS2D, described in Section\,\ref{sec:fs2d}, will be utilized as a robust registration method for 2D sonar scans to build a robust long-term SLAM framework.
+    First, the front-end for the long-term SLAM with FS2D is described.
+    Afterwards, an open-source system integration for low-cost SLAM, built on the front-end design is described.
+
+
+
+
+
+
+    \section{Front End design}\label{sec:front-end}
+
+    Mechanical scanning sonar\,(MSS) are low-cost sonars, that have a rotating transducer to measure a $360^{\circ}$ scan.
+    The BlueRobotics Ping360\,\cite{preamble}{ping360} needs 35 seconds for a full scan with 50\,m range.
+    This is due to the time-of-flight measurement and the speed of sound in water of 1500\,m/s.
+    When the MSS is mounted on top of the robot, movement during scanning requires motion compensation to create an undistorted sonar scan, when the sonar is measuring continuously.
+    In Section\,\ref{sec:exploration_flooded_basement} motion compensation was applied once, and for each scan a node in a graph was created.
+    This results in two things, each motion compensation is done once with the result being kept, and the nodes in the graph are spatially far apart from each other.
+    Especially the spacial distance between the nodes in the graph is a problem, since loop closures can only be created between these nodes, which means, parts of the scans are so far apart, that the overlap between scans can be low.
+    This makes the registration more difficult.
+    To address these challenges, a front-end design is necessary to include the special characteristics of a MSS.
+    This section summarizes the publication ``Synthetic Scan Formation for Underwater Mapping with Low-Cost Mechanical Scanning Sonars (MSS)''\,\ref{paper:synthetic_scan} and describes the design of a front-end framework.
+
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{figs/syntheticscan/AdaptiveScanFormation-Illustration01}
+        \caption[Mechanical Scanning Sonar scan-line formation]{A Mechanical Scanning Sonar (MSS) has a beam that provides a 1D image or scan-line $sl_t$ of backscatter intensities ordered by time-of-flight, i.e., range [A]. The MSS mechanically rotates the beam, which leads to a scan $sc(t)$ in form of a polar image if the sensor pose $p(t+i)$, here $0\leq i < 7 $, is fixed during that time [B].}
+        \label{fig:front-endping}
+    \end{figure}
+
+    In order to formalize Synthetic Scan Formation\,(SSF) some notations need to be defined.
+    First, it is important to highlight, that the SSF formulation described here is in 2D, since we are using a 2D sonar system.
+    In general, SSF could also be applied in 3D.
+    In Fig.\,\ref{fig:front-endping} a MSS is shown with scan-lines and a full scan formation.
+    The MSS has a pose $p(t)$ at time step $t$, with a scan-line $sl_t$.
+    A scan-line is a vector $I[i_{tof}]$ of the amplitudes of the echo from the single ping, emitted by the sonar.
+    The amplitude in the vector depends on the intensities measured at time $t$.
+    The index $i_{tof}$ corresponds to the time-of-flight of each echo.
+    Additionally, the angle $\gamma$ describes the angle in which direction the transducer is looking.
+    A scan $sc(t)$ is a collection of $k$ consecutive scan-lines, where $\Delta\gamma$ is the step size of the angle over time.
+    Therefore, the total number of scan-lines $k$ is determined by the step size.
+    Assuming a fixed position of the sonar, the collection of $k$ scan-lines form a polar image, which can be described as a scan $sc(t)$ at time $t$.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{figs/syntheticscan/AdaptiveScanFormation-Illustration02}
+        \caption[]{On a moving platform [A], the scan-lines $sl_{t+i}$ can not just be combined into a polar image. But given pose-estimates $p(t+i)$ [B] for each $sl_{t+i}$, e.g., from navigation, they can be projected to form a scan $sc(t)$ [C].}
+        \label{fig:front-endmotioncompensation}
+    \end{figure}
+
+    In reality, the robot is moving around the environment, which means the pose $p(t)$ of the sonar is changing over time.
+    In Fig.\,\ref{fig:front-endmotioncompensation} the moving sonar is illustrated.
+    When the accurate pose $p(t)$ of the sonar at each timestep is known, a motion compensation can be used to avoid distortions.
+    In C of Fig.\,\ref{fig:front-endmotioncompensation} the scan-lines over time are depicted, which demonstrates the rendering of the polar image.
+    The pose $p(t)$ is a result of a local navigation and has inaccuracies.
+    Hence, an optimization of the SLAM framework improves the estimates of $p(t)$.
+
+    This can now be formulated as a graph, where each sonar measurement is saved in the graph with nodes and edges.
+    A node $v_i$ has a corresponding pose $p_i$, uncertainty $C_i$, and a scan-line $sl_i$.
+    Edges describe the constraints between the nodes, which are based on a dead reckoning navigation, or loop closures.
+    In the case of this section, the dead reckoning navigation is based on an extended Kalman filter\,(EKF), which estimates the pose of the robot based on an Inertial Measurement Unit\,(IMU) and a Doppler Velocity Log\,(DVL).
+    The loop closures are based on scan matching by the FS2D registration from Section\,\ref{sec:fs2d}.
+    Each time a scan matching occurs, the polar images are rendered based on the current state of the relevant nodes $v$.
+
+    \begin{figure*}
+        \centering
+        \includegraphics[width=\linewidth]{figs/syntheticscan/AdaptiveScanFormation-Illustration05}
+        \caption[Fornt end formulation for SLAM]{The scan formation [A] is initialized with motion compensation from navigation ($n=0$). An optimized pose estimates $p^{(n)}$ for each scan-line $sl^{(n)}$ is used, when a scan is formed again ($n>0$). Registrations between scans introduce new contraints [B]. After optimization with SLAM [C], there are new pose-estimates for the scan-lines, which can be used for scan formation ($n \rightarrow n+1$).}%
+        \label{fig:syntheticfullslam}
+    \end{figure*}
+
+    The synthetic scan formation can be seen in Fig.\,\ref{fig:syntheticfullslam}, where the process of the SLAM during runtime is depicted.
+    In A, with $n=0$ the estimation of the pose is based on the navigation without any optimization.
+    When more constraints are added to the graph, $n>0$, the optimization of the graph results in optimized pose estimates for each scan-line.
+    This registration process between two graph segments is shown in B.
+    It is important to emphasize, that the two parts of the graph, used for scan formation and registration, can overlap or be completely different.
+    This design choice depends on the environment and robot that is available.
+    During the SLAM optimization the pose estimates in the graph are changing after each optimization step, and when a scan formation is necessary, the current estimate of the poses inside the graph is used.
+    This can be seen in C.
+    In our experiments being able to create a sonar scan at any point in the graph is a big advantage.
+
+    As a validation for these claims, two different experiments were performed.
+    First, a gantry system with precise motion tracking above a small pool is used as a ground truth for tests.
+    Second, a field test for real-world data conducted.
+
+    Below are the key components used in the implementation.
+    The pose-graph is embedded into a factor graph optimized with iSAM2 \cite{preamble}{iSAM2-ICRA11} from GTSAM \cite{preamble}{FactorGraphs-Book17}.
+    Loop closures rely on proximity-based detection, which means, if a different region of the graph is spatially close by, for both parts sonar scans are formed and a registration is computed.
+    As described earlier, FS2D is used as a registration method from Section\,\ref{sec:fs2d}, which handles noisy sonar data effectively.
+    A fixed grid size of $N=128$ is used in all experiments.
+    Uncertainty estimation employs a persistent homology\,\cite{preamble}{peakDetection2DTopology} for peak detection in the frequency domain, followed by a principal component analysis\,\cite{preamble}{ComputationalTopology-Book2010} around each peak to derive covariance matrices.
+    Navigation uses an EKF to estimate the robots pose $\bm{x}_{ekf} = [x,y,z,\psi,\theta,\phi]^\top$, integrating DVL and IMU data\,\cite{preamble}{AUV-localization-survey-JIRA22}.
+    Hardware includes a BlueROV2 with a Ping360\,\cite{preamble}{ping360} sonar, Waterlinked A50 DVL\,\cite{preamble}{a50dvl}, and Xsens MTi-300 IMU\,\cite{preamble}{MTi-300-IMU-www23}.
+    For processing, a tethered control stations is used.
+
+    Here, the focus lies on two areas as examples to show the key results from this publication, see\,\ref{paper:synthetic_scan} for the other areas.
+
+    \begin{table}[htbp]
+        \centering
+        \caption[Sonar parameters for different test environments]{Sonar parameters for the two test environments, i.e., (A) pool, (B) Bunker Valentin basement. The number $k$ of scan-lines per scan follows from $\Delta\gamma$; it is provided for the sake of simplicity. The scan times are directly dependent on the max range $d_{max}$.}
+        % \resizebox{\linewidth }{!}{%
+        \begin{tabular}{|c |c c|}
+            \hline
+            & (A) & (B)  \\
+            \hline
+            max range $d_{max}$ (m) & 3 & 20  \\
+            step-width $\Delta\gamma$ (deg) & 0.9  & 0.9 \\
+            \#scan-lines $k$ per scan & 400 & 400 \\
+            \hline
+        \end{tabular}
+        % }
+        \label{tab:sonar-parameters}
+    \end{table}
+
+    In Tab.\,\ref{tab:sonar-parameters} the parameters for the different test environments are shown.
+    The first environment\,(A) is a pool, which has a gantry system for absolute ground truth positions.
+    Environment two\,(B) is a field trial in the basement of Bunker Valentin, which was shown in Section\,\ref{sec:valentin}.
+
+    Ground truth data is challenging for underwater robotics due to GNSS limitations.
+    Hence, we conducted pool experiments using a gantry system with precise CNC-controlled motion as a ground truth measurement.
+    The tank size is 2$\times$4\,m.
+    Therefore, only the results of a rectangular motion pattern are shown, since it illustrates the performance best.
+
+    \begin{figure*}[htbp]
+        \centering
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/_squares_dead_reckoning_}
+            \caption{dr (rectangles) \label{fig:maps-pool-dr-rect}}
+        \end{subfigure}
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/_squares_classical_slam_}
+            \caption{sota (rectangles) \label{fig:maps-pool-sota-rect}}
+        \end{subfigure}
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/_squares_dynamic_slam_4_0_}
+            \caption{SSF (rectangles)  \label{fig:maps-pool-ours-rect}}
+        \end{subfigure}
+        \caption[Generated maps of SLAM algorithms compared]{Maps generated with core navigation with dead reckoning (dr), state-of-the-art SLAM (sota), and Synthetic Scan Formation (SSF).
+        The ground truth is shown in red. The estimated trajectories are shown in green for each method.}
+        \label{fig:maps-pool}
+    \end{figure*}
+
+    In Fig.\,\ref{fig:maps-pool} the resulting maps with ground truth are shown.
+    Core navigation produced low-quality maps and high errors.
+    SLAM reduced trajectory drift, while SSF outperforming state-of-the-art methods on this non-linear trajectory.
+    This is especially visible on the bottom part of the resulting map, where multiple times the same wall can be seen.
+
+    \begin{table*}[htbp]
+        \caption[Accuracy of different navigation methods]{Accuracy of the core navigation with dead reckoning (dr), the state-of-the-art SLAM (sota), and Synthetic Scan Formation (SSF) for the trajectory in the pool. The errors are computed via the Euclidean distances of the estimated locations to the accurate ground for each pose.}
+        \label{tab:tuhh_tank_results}
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                & \multicolumn{3}{|c|}{error (mean $\pm$std) as L2-norm (m) }\\
+                trajectory  &   dr  & sota  &  SSF \\
+                \hline\hline
+                rectangles &  $ 0.3836\pm 0.2155$ & $0.1449 \pm 0.1002 $&  $0.0959\pm0.0698$ \\
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table*}
+
+    In Tab.\,\ref{tab:tuhh_tank_results} the quantitative results of the rectangle pattern are shown.
+    These results demonstrate a clear improvement indicated by a lower error.
+
+    \begin{figure*}
+        \centering
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/onlyMap_valentinKeller_dead_reckoning_}
+            \caption{dr \label{fig:results-dr-basement}}
+        \end{subfigure}
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/onlyMap_valentinKeller_classical_slam_}
+            \caption{sota \label{fig:results-sota-basement}}
+        \end{subfigure}
+        \begin{subfigure}{.31\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/syntheticscan/onlyMap_valentinKeller_dynamic_slam_4_0_}
+            \caption{SSF \label{fig:results-ours-basement}}
+        \end{subfigure}
+%    \caption{Valentin Bunker basement, without a visible surface.\textcolor{red}{axis tix passe ich am ende an}}
+        \caption[Sonar SLAM maps of the flooded basement in the Valentin Bunker]{Three maps of the flooded basement, which are generated by (a) core navigation with dead reckoning (dr), (b) SLAM with state-of-the-art scan formation (sota), and (c) can Formation (SSF). Our method leads to straighter walls, clearly visible exit structures at both ends of the main room, and it captures smaller parts like the L-shaped, broken wall.}
+        \label{fig:results_basement}
+    \end{figure*}
+
+    The other highlighted environment is recorded in the basement of the Bunker Valentin Memorial is shown.
+    In Fig.\,\ref{fig:results_basement} the resulting map of the field trial is shown.
+    Without any SLAM involved the core-navigation drift limits mapping accuracy so much, that it is not clear, how the map looks.
+    Using state-of-the-art SLAM improves the result significantly.
+    SSF outperformed state-of-the-art SLAM by capturing finer details, such as internal walls and connections in the basement.
+
+    \begin{table}
+        \caption[]{The computation times for processing one scan with dead-reckoning (dr), state-of-the-art SLAM (sota), and Synthetic Scan Formation (SSF), and the times for the average raw sonar-data acquisition for a scan in (A) the pool, and (B) the bunker basement.}
+        \label{tab:comp-time}
+        %   \resizebox{\linewidth }{!}{%
+        \centering
+        \begin{tabular}{|c |c c c|c c|}
+            \hline
+            & \multicolumn{3}{|c}{method (1 step)} & \multicolumn{2}{|c|}{sonar (1 scan)}\\
+            & dr & sota & SSF & (A) & (B) \\
+            \hline
+            time (sec) & 0.18 & 0.4 & 0.6 & 20 & 32\\
+            \hline
+        \end{tabular}
+%    }
+    \end{table}
+
+
+    SSF enables the possibility to create a more complex loop closure system, which could improve the results further.
+    In this publication, the goal was to show that the formulation can lead to the same or better results compared to the conventional way of creating sonar scans just once.
+    Lastly, the computational power necessary for the SSF formulation is of interest.
+    Table\,\ref{tab:comp-time} shows SSF adds ~50\% computational overhead but processes scans faster than data acquisition, making it suitable for real-time use.
+    In the next section the system integration of the SSF formulation is presented and the computation times in different scenarios are analyzed.
+
+
+    \section{Open \& Affordable System Integration}\label{sec:full_slam}
+
+    Localization in difficult terrains with autonomous underwater vehicle\,(AUV) remains a challenge that is often solved by highly specialized equipment.
+    Hence, the costs of the hardware necessary is often very high.
+    In recent years, aerial drones, and land rovers managed to create SLAM systems, which are based on cheaper sensors.
+    In contrast, the underwater domain lacks such affordable solutions.
+    In the underwater domain, using open-source SLAM systems is difficult, due to lidars and cameras having limited use in cluttered, water.
+    Using sonars in the underwater domain requires other types of algorithms and SLAM approaches, such as the Synthetic Scan Formation\,(SSF) introduced in Section\,\ref{sec:front-end}.
+    What is still missing is the implementation on the real robotic hardware and its testing with the limitations at real world usage.
+
+    Here, the publication ``An Open-Source Solution for Fast and Accurate Underwater Mapping with a Low-Cost Mechanical Scanning Sonar''\,\ref{paper:open_source_slam} is summarized and the important takeaways are highlighted.
+
+    The goal is to develop and test an open-source framework, which other researchers can easily implement and use on other underwater robots.
+    The work employs affordable underwater sensors, namely the Blue Robotics Ping360\,\cite{preamble}{ping360} Mechanical Scanning Sonar\,(MSS) and a WaterLinked A50\,\cite{preamble}{a50dvl} Doppler Velocity Log\,(DVL).
+    Additionally, the BlueROV2 is used as a carrier platform, described in more detail in Section\,\ref{sec:bluerov2}.
+    Computational constraints also arise, as a Raspberry Pi 4\,(RPI4)\,\cite{preamble}{raspberrypi} is used for onboard processing on the BlueROV2, which has limited memory size and limited processing power.
+    Onboard processing is critical not only for autonomous underwater vehicles, but also for unmanned underwater vehicles due to communication bandwidth limitations.
+    Since the RPI4 is widely available, it provides a good computation unit for the implementation and testing.
+
+
+    Synthetic scan formation\,(SSF) uses factor graphs and is optimized via iSAM2\,\cite{preamble}{Kaess2012isam2} from GTSAM\,\cite{preamble}{gtsam}, as described in Section\,\ref{sec:front-end}.
+    The front-end employs FS2D, a spectral registration method for low-quality, noisy sonar scans, discussed in Section\,\ref{sec:fs2d}.
+    A grid size of $N = 128$ is used for registration with FS2D.
+    The navigation relies on underwater dead-reckoning, which is based on an EKF, which fuses the DVL with an IMU and a depth sensor, to predict the 3D pose of the robot.
+    State variables $[x, y, \phi]$ are open-loop since the depth, roll, pitch and rotation velocities are directly measurable by the IMU and depth sensor.
+    For the SLAM system, only the 2D pose, $\mathbf{p}_s(t) = [x_s(t), y_s(t), \phi_s(t)]^T$, is used.
+
+
+    Loop closures are critical for SLAM.
+    As described earlier, SSF enables the designer to be very creative with its loop closure.
+    Here, two different types of loop closures are used.
+    First, a loop closure based on the recently recorded scan-lines is used, which is denoted here as type A loop closure.
+    The type A loop closure uses the last two consecutive $360^\circ$ rotations and computes a registration between the two scans.
+    Second, type B loop closure, is a proximity based loop closure which uses the last $360^\circ$ scan that is registered with the closest node in the graph, with a minimum number of nodes away.
+    The scan is formed by combining two $180^\circ$ in both directions, backward and forward, of the closest node, so that again a full $360^\circ$ scan is used for the registration.
+
+    Type A uses recent scan-lines to reduce dead-reckoning errors.
+    A new type A loop closure is computed, when node and scan-line rotations together reach $360^\circ$.
+    This ensures full-circle coverage for quality 2D images.
+
+    After a type A loop closure is performed, a type B loop closure is attempted.
+    It is only executed if the proximity to recent parts of the factor graph is low enough, and at least a constant number of nodes away to make sure, to not add redundant information.
+
+
+
+    \begin{figure*}[!htb]
+        \centering                  % zentrierte Ausrichtung
+        \fontsize{10pt}{11pt}\selectfont
+        \def\svgwidth{1.0\linewidth}
+        \import{figs/lowCostSlam/}{slamOverview.pdf_tex}
+        \caption[Software framework for real-time SLAM]{An overview of the components of the software framework. The blue arrows indicate an asynchronous data stream, while the green arrows synchronizes the computation in the framework. }    % Bildunterschrift
+        \label{fig:slam_system_overview}
+    \end{figure*}
+
+    The SLAM system utilizes the Robotic Operating System 2\,(ROS2) for inter-component communication, enabling a modular design comprising an Extended Kalman Filter (EKF) for state estimation, a front-end employing FS2D registration, and a back-end implemented with iSAM2 optimization.
+    This modularity facilitates independent development, testing, and potential replacement of individual components.
+
+    Fig.\,\ref{fig:slam_system_overview} illustrates the software structure.
+    Asynchronous data streams connect these modules, while synchronization is enforced during critical processing steps such as loop closure detection and graph optimization.
+    The relatively slow scan speed of MSS limits the maximum update rate of the SLAM framework.
+     Therefore, new measurements are appended to a list for subsequent processing.
+    Each processed scan-line results in the creation of a new node in the graph-based SLAM system.
+    Loop closure detection is initiated after completing a full $360^\circ$ rotation followed by optimization of the accumulated pose graph.
+    This design prioritizes real-time performance, within the constraints imposed by the sensors acquisition rate.
+
+
+    \begin{figure*}[!h]
+    \centering
+    \begin{subfigure}{.36\linewidth}%height=4.8cm
+        \centering
+        \includegraphics[width=0.99\linewidth]{figs/lowCostSlam/blueROV2OceanLab.jpeg}
+        \caption{BlueROV2}
+        \label{fig:olab}
+    \end{subfigure}
+    \begin{subfigure}{.30\linewidth}
+        \centering
+        \includegraphics[width=0.87\linewidth]{figs/lowCostSlam/oceanLabExp1.pdf}
+        \caption{Ocean Lab Map}
+        \label{fig:olab_map}
+    \end{subfigure}
+    \begin{subfigure}{.32\linewidth}
+        \centering
+        \includegraphics[width=0.87\linewidth]{figs/lowCostSlam/valentinMap.pdf}
+        \caption{Basement Map}
+        \label{fig:bunker_map}
+    \end{subfigure}
+    \caption{An overview of the three test environments.}
+    \label{fig:environemnts}
+    \end{figure*}
+
+
+    The focus of the previous section lay on quantitative results of the SLAM system.
+    In this section, instead the focus is on the practical application possibilities and limits.
+    In Fig.\,\ref{fig:environemnts} two resulting maps with the robots path is shown.
+    Fig.\,\ref{fig:olab_map} shows the map of a pool at the Oceanlab, in the Constructor University.
+    The Oceanlab pool is correctly represented in the map.
+    In Fig.\,\ref{fig:bunker_map} the map of the basement inside the Bunker Valentin is shown.
+    The path in green shows that the robot was going in both directions inside the environment behind the wall fragments and to an entrance of an unknown area.
+    While the ground truth of the environment is unknown, it can be seen, that the room is straight, which aligns with historical plans of the Bunker Valentin Memorial, and the experience of operating in that environment.
+
+    \begin{figure*}[!h]
+        \centering
+        \begin{subfigure}{.46\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/lowCostSlam/computationTimesexp4.pdf}
+            \caption{OceanLab, short scans \label{fig:time-olab-shortscan}}
+        \end{subfigure}
+        \begin{subfigure}{.46\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/lowCostSlam/computationTimesexp3_5.pdf}
+            \caption{OceanLab, long Scans \label{fig:time-olab-longscan}}
+        \end{subfigure}
+        \begin{subfigure}{.46\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/lowCostSlam/computationTimestuhhTest.pdf}
+            \caption{Gantry test-tank\label{fig:time-tuhh}}
+        \end{subfigure}
+        \begin{subfigure}{.46\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{figs/lowCostSlam/computationTimesValentin128.pdf}
+            \caption{Bunker Valentin basement\label{fig:time-valentin}}
+        \end{subfigure}
+        \caption[Computation time compared to scan aquisation time]{The time it takes to acquire the sonar data for a full sonar scan (blue line) and to fully process a scan (brown line) over the duration of each mission for the three scenarios, respectively two different parameter settings in the Oceanlab pool. In all cases, the processing can be done in real-time.}
+        \label{fig:time}
+    \end{figure*}
+
+    Further important results from the perspective of this publication are presented in Fig.\,\ref{fig:time}.
+    The graphs illustrate the time required to acquire sonar data for a full scan and to process a scan over the duration of each mission.
+    While the speed of sound and maximum range significantly impact the time needed to collect a single scan-line, other sonar settings, e.g. the stepping angles affect scanning duration too.
+    This is demonstrated in Fig.\,\ref{fig:time-olab-shortscan} and\,\ref{fig:time-olab-longscan}, where two distinct stepping angles, 0.9$^\circ$ and 4.5$^\circ$, during experiments in the Oceanlab pool are used.
+    With a fast scanning setting, the average data acquisition time per scan is approximately 9 seconds, whereas slower settings result in approximately 32 seconds per scan.
+    It is important to note that scan acquisition times vary due to the strategy used to render scans based on a collection of scan-lines covering 360$^\circ$, which depends on the combined rotation of the sonar beam and the vehicle movement.
+
+    In contrast, the gantry test-tank experiment, from last section, as shown in Fig.\,\ref{fig:time-tuhh} shows constant acquisition times because the gantry provides only translational motion without any rotation, which is not normal for a moving vehicle.
+    A critical insight from all four cases in Fig.\,\ref{fig:time} is that processing times are significantly shorter than the sensor data update rate.
+    Therefore, real-time processing on a Raspberry Pi 4 despite computational constraints, is possible.
+    Despite this, computation times generally rise over the mission duration due to growing graph sizes and increased type A and type B loop closures computation times.
+    Additionally, both iSAM2 optimization time and algorithmic computational overhead increase.
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=\linewidth]{figs/lowCostSlam/barGraphValentin128}
+        \caption[Processing times during real-time SLAM]{The development of the distribution of the processing time (y-axis, in $sec$) over mission time-windows (y-axis, in $min$) for the different software components in the Bunker Valentin experiment.}
+        \label{fig:computation-detail-valentin}
+    \end{figure}
+
+    Fig.\,\ref{fig:computation-detail-valentin} provides further insight into the software computational demands by breaking down average processing times into four components.
+    These include the iSAM2 optimization, type A and type B loop closures, and rendering with its associated software overhead.
+    Notably, type B loop closure computation varies significantly with the robot trajectory.
+    For example, between minutes 13-17, type B loop closures occur less frequently due to the robot exploring new areas without many successful type B loop closure.
+    This is the time, where the robot is moving from the bottom side of the basement to the top side of the basement, as shown in Fig.\,\ref{fig:bunker_map}.
+    Therefore, during this time the average computation time is reduced.
+
+    This variability highlights opportunities for implementing exploration-exploitation trade-off strategies in third-party experiments or long-term missions using the software framework.
+    Overall, the presented framework offers significant potential as a foundation for future research and applications.
+
+
+    \chapter{Towards Open Affordable Underwater Robots}\label{ch:open_source}
+
+    Underwater research platforms remain significantly more expensive compared to aerial drones and land-based robotics.
+    They require waterproofing, pressure resistance and corrosion protection.
+    Additionally, sound-based sensors are not widely used, compared to cameras or lidar sensors, and often very specialized robots for certain tasks are necessary.
+    All of the above makes underwater robots less affordable.
+    To address these challenges, Blue Robotics began in 2014 to build more affordable modular robotic platform called the BlueROV, and later the BlueROV2.
+
+    The BlueROV2 is a versatile, remotely operated underwater vehicle\,(ROV)\,\cite{preamble}{bluerov2}.
+    Featuring a modular, open-frame design, it allows users to customize payloads and sensors.
+    Equipped with six brushless thrusters, it can operate to depths of up to 100 meters.
+    The system includes a high-resolution camera, LED lighting, and depth-sensing modules, all controlled via a surface computer connected by a tether.
+    Its open-source ecosystem can enables developers to integrate custom software or hardware.
+    In Fig.\,\ref{fig:BlueROVDifferences} depicts the standard configuration of the BlueROV2, as purchased directly at Blue Robotics.
+
+    \begin{figure*}[!h]
+        \centering
+        \begin{subfigure}{.45\linewidth}%height=4.8cm
+            \centering
+            \includegraphics[width=0.99\linewidth]{figs/BlueROV/BluerovStandard}
+            \caption{Classical BlueROV2}
+            \label{fig:bluerovStandard}
+        \end{subfigure}
+        \begin{subfigure}{.45\linewidth}%height=4.8cm
+            \centering
+            \includegraphics[width=0.99\linewidth]{figs/BlueROV/BlueAUVImage}
+            \caption{Custom BlueAUV}
+            \label{fig:blueROVOur}
+        \end{subfigure}
+        \caption[Upgrade of a classical BlueROV2]{In (a), the classical BlueROV2 is shown, which can be purchased by Blue Robotics. In (b), the upgraded custom BlueAUV is shown, which uses custom hardware and software.}
+        \label{fig:BlueROVDifferences}
+    \end{figure*}
+
+    In this chapter, the \textit{BlueAUV} is described, the customized version of BlueROV2 with its open hardware and open-source software.
+
+
+    \section{BlueAUV}\label{sec:bluerov2}
+
+    The BlueAUV is a custom adaptation of the BlueROV2.
+    The adaptations are a first step towards a fully autonomous underwater vehicle.
+    The goal is to provide an openly available underwater vehicle featuring open-source software and affordability for generalized underwater robotic research on different topics.
+
+    In order to do SLAM research with sonars on the BlueAUV, the robot needs to have additional housings, and additional sensors, together with additional affordable sonars.
+    The BlueAUV is developed by us to carry the additional load, and make it easily expandable.
+    Here, our change from the BlueROV2 to the BlueAUV is described.
+
+    First, a Doppler Velocity Log, a Mechanical Scanning Sonar, a high precision IMU, and two Raspberry pis were added.
+    Additionally, to carry the weight, and make the BlueROV2 controllable in 6 dimensions of freedom, the heavy configuration kit\,\cite{preamble}{bluerov2heavykit} was added.
+    The software is mostly custom and utilizes the Robotic Operating system 2\,(ROS2)\,\cite{preamble}{macenski2022robot}, together with the PX4 flight computer software\,\cite{preamble}{meier2015px4}.
+    Hence, enabling an efficient way of controlling and developing directly on the robot without any closed source software.
+    This change from a classical BlueROV2, to an affordable research BlueROV2 with open-source software and modular design is described next.
+
+    First, the hardware design change of the BlueROV2 is described, which include the different sensors and electronical setup of the BlueROV2.
+    Second, the software that was used, namely the ROS2, and the PX4 flight software is described.
+    In the end a simulation environment, based on Gazebo\,\cite{preamble}{koenig2004design} is shortly presented, that can be used with ROS, and PX4.
+
+
+
+
+    \subsection{Hardware}
+
+    As discussed earlier the BlueROV2 requires multiple extensions in order to function as a custom robot for research.
+    The hardware requirements for the custom BlueROV2 lie in the following things:
+    \begin{itemize}
+        \item Systematic modular design for easy integration of new sensors
+        \item Sensor setup for SLAM and perception applications
+        \item Computation capabilities, for recording sensor data and controlling
+        \item Connection capabilities between all components
+        \item Restart options for the sensors
+    \end{itemize}
+    In Fig,\,\ref{fig:bluerov2_external_sensors} the biggest changes to the standard BlueROV2 with the heavy kit are shown.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{figs/BlueROV/grafik02_blueRov}
+        \caption[Overview all custom BlueROV2 sensors]{An overview of custom added sensoring and housing in the BlueAUV.}
+        \label{fig:bluerov2_external_sensors}
+    \end{figure}
+
+    For external perception the BlueRobotics Ping360\,\cite{preamble}{ping360} is installed, which is a low-cost MSS, if not the most affordable device of this type on the market.
+    It emerged in recent years in the context of open-source components for marine robotics and it is positioned as an add-on for the Blue Robotics BlueROV2.
+    The Ping360 has a maximum range of $50 m$, with a depht rating of $300 m$.
+    The mechanical head rotates 360 degrees and detects an intensity vector of the echo with its time-of-flight for each element.
+    It operates at $750 kHz$, and has a maximum power consumption up to $5 W$.
+
+    The other external sensor is the Doppler Velocity Log A50 by Waterlinked\,\cite{preamble}{a50dvl}.
+    It can measure the relative velocities of the sensor compared to the ground with the help of the doppler effect.
+    The transducer of the A50 DVL operates at $1 MHz$ and has a $0.05 - 50m$ altitude range.
+    The ping rate is $4 - 15 Hz$ depending on the altitude, and a nominal velocity resolution of $0.1 mm/s$ at $\pm 0.1\%$ accuracy for the performance version.
+    Its small size of $66 mm$ diameter and $25 mm$ height as well as the low average power consumption of $4 W$ makes the DVL an affordable solution for accurate underwater velocity estimation.
+
+    In addition to the perception sensors, the Xsens MTi-300\,\cite{preamble}{MTi-300-IMU-www23} IMU for the 6-axis gyroscope and acceleration measurements are used.
+    A high performance IMU enables a better estimation of the yaw rotation on the BlueROV2, that can later be used for a more sophisticated SLAM system.
+    This sensor demonstrates exceptional accuracy, particularly among micro-electromechanical systems devices, thanks to its precise factory calibration.
+    It specifies a nominal accuracy of 0.2$^\circ$ root mean square (RMS) error for roll and pitch angles, and 1$^\circ$ RMS for yaw.
+    The device maintains a low bias drift of $10^{\circ}/h$ during continuous operation, with an output update rate of $200 Hz$.
+
+    The flight computer, namely Pixhawk 1, was upgraded to the Pixhawk 6X\,\cite{preamble}{pixhawk6x}.
+    The new Pixhawk 6X has many advantages over the old Pixhawk 1.
+    The Pixhawk 1 had a hardware bug, which resulted in only $1 Mb$ RAM, which over the years is not enough RAM to hold the full flight software.
+    Additional upgrades were made to the processor, internal IMUs, Voltage support and newer GPS standard.
+    The most important update for the BlueROV2 were the support of an ethernet connection.
+    With an ethernet connection the connection speed and integrability with ROS2, the ground station, and multiple Raspberry pis offered a more sophisticated solution.
+
+    The companion computer, a Raspberry pi 3b, was also upgraded to two Raspberry pi 4 with $8 Gb$ of RAM.
+    One Raspberry pi was a replacement to the old one, and the second was positioned at the additional housing to manage the communication with the sensors.
+    The additional RAM available, and the improved processor, can be used to have faster compiling times and less overhead when more RAM is necessary without using the micro SD card as a slow RAM.
+    Additionally, the model 4 supports gigabit ethernet, which makes the connections between the sensors much faster and more robust.
+
+    All the changes mentioned above makes the BlueROV2 a more robust, sophisticated research robot, that can adopt to the research objective of interest.
+
+
+
+    \begin{figure}
+        \centering
+        %\def\svgwidth{1.0\textwidth}
+%        \input{figs/BlueROV/testsvg.svg}
+        \includegraphics[width=0.95\linewidth]{figs/BlueROV/overviewBlueROVAll}
+        \caption[Overview BlueROV2 electronic settings]{Overview of the electronics used in the custom BlueROV2. The electronics is distributed over three tubes. The main-tube is the main communication tube to the base station, and the sensor-tube has the perception sensors connected.}
+        \label{fig:overview_electronics}
+    \end{figure}
+
+
+    In Fig.\,\ref{fig:overview_electronics} an overview of the internal electronics are depicted.
+
+    \begin{table}[htbp]
+        \centering
+        \caption[Custom electrical componens used in the BlueROV2]{A list of all the additional custom and unique electronic components and sensors used in the Custom BlueROV2, which are not included in the classical BlueROV2.}
+        % \resizebox{\linewidth }{!}{%
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Component Name & usage  & Reference\\
+            \hline
+            Raspberry Pi 4 & computation and intereference & \cite{preamble}{raspberrypi}  \\
+            \hline
+            Pixhawk 6X & Control and PWM generation  & \cite{preamble}{pixhawk6x}  \\
+            \hline
+            Power module & Measuring power consumption  & \cite{preamble}{pixhawkpowermodule}  \\
+            \hline
+            IMU & Measuring G-Forces and rotation speed & \cite{preamble}{MTi-300-IMU-www23}  \\
+            \hline
+            Ping360 & Perception of the environment & \cite{preamble}{ping360}  \\
+            \hline
+            A50 Waterlinked DVL & Measuring relative velocity  & \cite{preamble}{a50dvl}  \\
+            \hline
+        \end{tabular}
+        % }
+        \label{tab:component_list_electric}
+    \end{table}
+
+    A list of all the important components are shown in Tab.\,\ref{tab:component_list_electric}.
+
+    The most important change of the BlueROV2 is the added payload on the bottom of the BlueROV2.
+    It adds a new housing, called the sensor-tube, which is using the same housing as the original tube, which is called the main-tube.
+    Both tubes accommodate a Raspberry pi 4 which are used as a companion computer to manage all the processing and communication.
+    The main-tube pi is called main-pi, and the sensor-tube pi is called sensor-pi.
+    Having two different Pis are useful since the computation can be split between them, and an additional housing can be easily used without having to many cables between the two housings.
+
+    The power is first brought to the main-tube, and later to the sensor-tube.
+    A power module is used to monitor the full power consumption of the BlueROV2 and is send directly to the Pixhawk, which monitors the power consumption.
+    Leakage sensor, camera, and light sensor is directly connected to the main-pi together with 3 ethernet connections, where two ethernet connections are used with an USB adapter.
+    Additionally, a relai is connected to the GPIO pins of the pi to cut the power to the sensor-tube.
+    That helps at startup, where all the different components draw power at the same time, which creates spikes in the power consumption.
+    The sensor-tube is started after the main-pi was booted.
+    Moreover the DVL is build to be in the water and it overheats at the air quickly.
+    Therefore, it is useful to be able to cut the power to the sensor-tube.
+
+    The sensor-pi is connected to the main-pi and the DVL with an ethernet connection.
+    Additionally, the DVL uses a custom interface, which takes in an ethernet connection and power.
+    The IMU, and Ping360 are connected with an USB connection, and an additional depth and leakage sensor are connected to the GPIO pins.
+    The Pixhawk in the main-tube is connected to the ESCs, ethernet, power module and depth sensor.
+
+    Additional sensors or computation modules can be added to the sensor-tube, since the space inside that tube is big enough.
+    In two publications of this thesis, additional sensors to the BlueROV2 were added.
+    In Section\,\ref{sec:brick_dating} a laser was added next to the sensor-tube to create a rectangular pattern in order to view the relative distances on a wall.
+    In Section\,\ref{sec:data_set_2_d} an additional rotating sonar was used.
+    The Tritech Micron Sona\,\cite{preamble}{tritechmicron} was positioned with a 90 degree rotation in front of the BlueROV2.
+    The cable connection was connected to the sensor-pi USB hub, and got power from the power distribution.
+
+
+    \subsection{Software}
+
+    Since the hardware is custom, the software also has to be custom to a certain point.
+    This BlueROV2 uses two main software components, namely PX4, the software for the Pixhawk 6X flight controller, and ROS2, a middle ware for data communication.
+    Other standard software is also used, but is not a main focus of this section.
+    Since the software is open-source, the additional software that is necessary is documented.
+    The focus lies on the PX4 software, with its integration into the underwater domain, and on the ROS packages that were created to control all the sensors.
+
+
+    \subsubsection{PX4}
+
+    PX4 is an open-source flight control software framework designed for autonomous drones and unmanned vehicles, including quadcopters, fixed-wing aircraft, and hybrid VTOL systems\,\cite{pramable}{meier2015px4}.
+    Developed for technical users, it provides a modular architecture that integrates sensor fusion (e.g., IMU, GPS, barometer), flight control algorithms, and navigation stacks to enable advanced autonomy.
+    Its design supports integration with ROS2 for custom applications.
+    PX4 runs on embedded hardware, including the Pixhawk and offers tools for simulation, debugging, and real-time tuning.
+    Widely adopted in research, commercial drone systems, and industrial automation, it benefits from a vibrant community contributing to its robustness, scalability, and adaptability across platforms and missions.
+    While PX4 supports mainly aerial drones, it also offers the possibility to easily integrate underwater vehicles too.
+    In 2019 the Hippocampus robot was integrated as an underwater module with its geometric controller\,\cite{preamble}{duecker2020hippocampusx}.
+    Based on this approach, a custom PX4 software was used as a starting point to control the BlueROV2.
+    By now the BlueROV2s main functions are also supported by the PX4 software, and can be used for the control of the BlueROV2.
+
+    \subsubsection{Robotic Operating System}
+
+    The Robot Operating System\,(ROS) is an open-source middleware framework designed to facilitate the development, simulation, and deployment of robot software.
+    Introduced in 2007, ROS provides a collection of tools, libraries, and conventions that enable modularity, reusability, and collaboration in robotics research and industry.
+   ROS simplifies complex robotic tasks by abstracting hardware interfaces, sensor data processing, and control algorithms, making it a cornerstone for research in autonomous systems, perception, and navigation.
+    However, ROS has limitations, including reliance on a centralized \textit{master node} for discovery and communication, lack of formalized quality-of-service (QoS) guarantees, and insufficient support for real-time and secure operations.
+    Therefore, ROS 2, the next-generation framework, addresses these shortcomings through a comprehensive redesign.
+
+    Key improvements include:
+    \begin{itemize}
+        \item Adoption of the \textit{Data Distribution Service (DDS)} middleware standard, enabling scalable, decentralized communication with robust QoS policies.
+        \item Elimination of the single-master architecture, allowing multi-master and peer-to-peer network configurations for distributed robotics systems.
+        \item Support for resource-constrained hardware, expanding applicability to embedded systems and real-time applications.
+        \item Enhanced performance and interoperability through native support for C++20, Python, and other languages, alongside improved logging, tracing, and debugging tools.
+    \end{itemize}
+
+    These advancements position ROS 2 as a versatile platform for modern robotics.
+    By prioritizing reliability, security, and scalability, ROS 2 bridges the gap between research prototyping and real-world deployment, fostering innovation across academia and industry.
+    During the development of the BlueROV2, first ROS and later ROS2 was used.
+    One key benefit of ROS2 for this custom BlueROV2, was the direct interface with the PX4 software.
+    ROS2 enables the direct communication with the communication framework that PX4 is using, which enables faster and direct access to all PX4 capabilities.
+
+    In ROS2, the modular design, which the use of packages, enables a distinct usage for custom hardware.
+    Every special task used in the BlueROV2 has its own package, to keep the software modular.
+
+    \begin{table}[htbp]
+        \centering
+        \caption{ROS2 packages}
+        % \resizebox{\linewidth }{!}{%
+        \begin{tabular}{|c|c|c|}
+            \hline
+            package name & usage & Reference\\
+            \hline
+            \textit{bluerov2common} & general software & \cite{preamble}{bluerov2common}  \\
+            \hline
+            \textit{gazebo\_px4}& custom gazebo tools & \cite{preamble}{bluerov2gazebo}  \\
+            \hline
+            \textit{bluerov2commonmsgs}& Custom Message definitions & \cite{preamble}{bluerov2messages}  \\
+            \hline
+            \textit{micron\_driver\_ros}& Tritech Micron Driver & \cite{preamble}{Tritech-Micron-Driver}  \\
+            \hline
+            \textit{bluespace\_ai\_xsens\_mti\_driver}& Xsens IMU Driver & \cite{preamble}{bluespace_ai_xsens_mti_driver}  \\
+            \hline
+            \textit{ping360\_sonar}& Ping360 driver & \cite{preamble}{ping360_sonar} \\
+            \hline
+            \textit{ping360\_sonar\_msgs}& Ping360 Message definitions & \cite{preamble}{ping360_sonar_msgs}  \\
+            \hline
+            \textit{waterlinked\_a50}& A50 DVL Driver & \cite{preamble}{waterlinked_a50} \\
+            \hline
+        \end{tabular}
+        % }
+        \label{tab:ros2_packages}
+    \end{table}
+
+    In Tab.\,\ref{tab:ros2_packages} the different packages that are used in the BlueROV2 are listed.
+    All modules have been made openly available to be used.
+    They can be installed with a custom workspace directly on the main-pi and sensor-pi.
+    They enable the communication with the sensors and a working research robot.
+
+
+    \chapter{Open Data}\label{ch:open_data}
+
+
+    In nowadays robotics, datasets are essential for many different tasks, including control, perception, classification and more.
+    Often, machine learning algorithms are trained on openly available datasets, and advance the field of robotics.
+    Having ground truth inside the dataset helps with training efficiently.
+    In the case of underwater robotics, openly available datasets are much rarer.
+    One reason is the lack of ground truth, since GNSS devices are not usable, or the map of underwater environments are missing.
+    Additionally, security and cost reasons can lead to less openly available datasets.
+
+    In this thesis, the focus lies on affordable underwater robotics with sonar perception.
+    Mechanical Scanning Sonars\,(MSS) are popular underwater sensors for Unmanned Underwater Vehicles\,(UUV) due to their affordable price, small size, and low power consumption.
+    Nevertheless, there is also a lack of openly available datasets with any ground truth.
+    Often the datasets include only one sonar sensor or are camera based.
+    An example includes\,\cite{preamble}{Underwater3Dmap-JFR16} on autonomous exploration of confined underwater environments, where the dataset is included in the publication, and the ground truth is measured by having cones, acting as ground truth, measured by divers.
+    Another popular choice is the dataset published in 2008\,\cite{preamble}{RibasEtal-UnderwaterSLAM-JFR08}, which includes an underwater GPS for the ground truth.
+    Having sensor synchronization was a big challenge for research robots many years ago.
+    In the recent years, ROS helps to easily share data of robotic applications.
+    Therefore, this data can easily be used in existing ROS frameworks and setups, without the necessity to think about synchronization or the difficulties on the extraction of the datasets.
+    Nevertheless, publishing full datasets with affordable sonar setups is still rare.
+    In this chapter, we summarize a publication, where a dataset was published, that includes ground truth inside a big research pool.
+
+    \section{Dataset for 2D low-cost navigation}\label{sec:data_set_2_d}
+
+
+    In this section, the focus lies on a publication, where 14 different datasets are provided.
+    The datasets are based on MSS using an UUV with standard navigation sensors, i.e., an Inertial Measurement Unit (IMU) and a Doppler Velocity Log (DVL).
+    The UUV is globally localized with a high precision optical tracking system in a large research pool to provide ground truth.
+    The publication is a first step for open-source underwater robotic datasets, that can be used for sonar registration and SLAM with affordable hardware.
+
+    Different parameter settings and environment conditions are covered, e.g., dynamics in the scene.
+    The IMU and DVL data is also of interest for research on navigation and control, independent of the MSS data.
+    Results from navigation and mapping with an Extended Kalman Filter (EKF) are in addition provided as baseline solutions.
+
+    In the following the experimental setup, witch include its sensors, UUVs and facility is described.
+
+    Mechanical scanning sonars (MSS) use a rotating single beam to create polar images by capturing return amplitudes over time.
+    In this publication two common MSS types are used.
+    The low-cost BlueRobotics Ping360, often used in marine robotics, and the established Tritech Micron DST, which offers better depth ratings and chirped pulses.
+    They are mounted differently (forward-looking vs. down-looking) to enable parallel data recording for analyzing cross-talk effects.
+    Not every dataset uses both at the same time, but they are marked accordingly.
+
+    As a robot we use the BlueROV2.
+    The BlueROV2 ROV is equipped a DVL (Waterlinked A50) and IMU (Xsens MTi-300) for underwater navigation.
+    The DVL operating at 1MHz and the IMU offering high MEMS-based accuracy.
+    Since motion compensation is critical due to slow sonar scan times, using a more accurate IMU in combination with the DVL is necessary and also supports research on navigation and hydrodynamics.
+
+    The trials occur in a large, deep saltwater test basin at the German Research Center for Artificial Intelligence (DFKI) in Bremen (23x19x8m), equipped with a high-precision Qualisys optical motion capture system (12 cameras, 12MP each) tracking markers on the BlueROV2.
+    This system provides 4mm accuracy at 300Hz, including orientation data unlike GNSS ensuring reliable ground truth for navigation research.
+    An image of the test basin is shown in Fig.\,\ref{fig:DFKI_cad_view}.
+
+    \begin{figure*}
+        \centering
+        \includegraphics[width=.8\linewidth]{figs/dataset/20231018_154154-B}
+        \caption[DFKI test facility]{A snapshot of the DFKI test tank where the data was recorded. % (top).
+        The 12 Qualisys cameras for motion tracking are roughly placed in regular distances - a CAD layout of the pool and the exact locations of the cameras are provided together with the datasets.
+        }
+        \label{fig:DFKI_cad_view}
+    \end{figure*}
+
+    The data records consist of 14 datasets.
+    There are 13 main datasets with ground truth and a 14th dataset, where the robot is kept in a fixed position without ground truth localization for the calibration of the sensors.
+    Sensor locations on the robot are documented in the datasets and their documentation, see Fig.\,\ref{fig:robot_cad_view}
+
+    \begin{figure*}[h]
+        \centering
+        \includegraphics[height=4.5cm]{figs/dataset/Main Frame}
+        \includegraphics[height=3.5cm]{figs/dataset/DVL}
+        \caption[The BlueROV2 CAD model with the location of the sensors]{A BlueROV2 CAD model is used to provide the locations of all sensors as part of the datasets and their documentation. The reference frame of the robot itself is placed at the geometrical center of the robot (left). The locations of the sensor frames, e.g., for the DVL (right), are provided relative to the robot frame.}
+        \label{fig:robot_cad_view}
+    \end{figure*}
+
+
+    Datasets are stored as ROS2-bags and YAML-files.
+    They are available via IEEE Dataport (\url{https://doi.org/10.21227/dy87-1k42}) as a single zip-file.
+    A documentation paper with technical details, e.g. message types and sensor positions, is also provided under the same DOI.
+
+    \begin{table}[ht]
+        \centering
+        \scalebox{0.85}{
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                data- & \#scan- & \multicolumn{2}{c|}{Ping360} & \multicolumn{2}{c|}{Micron} & DVL & \multicolumn{2}{c|}{IMU} & mot. & dyn.& vel. \\
+                set & lines & range [m] & step [$deg$] & range [m] & step [$deg$] & A50 & MTi & PX4 & val. & sce.&f/s\\
+%set & lines & range & step & range  & step & A50 & MTi & PX4 & val. & sce.\\
+% & & [m] & [$deg$] &  [m] &  [$deg$] &  & &  & & \\
+                \hline
+                1 & 6,993 & 15 & 0.9$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & - & - & - &s\\
+                2 & 7,361 & 15 & 0.9$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ &$\bullet$ & - & - &f\\
+                3 & 9,198 & 15 & 3.6$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & - &s\\
+                4 & 6,608 & 15 & 3.6$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & - &f\\
+                5 & 14,578 & 7 & 0.9$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & -&s \\
+                6 & 7,784 & 7 & 0.9$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & - &f\\
+                7 & 9,146 & 7 & 3.6$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & - &s\\
+                8 & 7,074 & 7 & 3.6$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & - & - &f\\
+                9 & 12,396 & 15 & 0.9$^o$ & 15 &0.9$^o$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & -&s \\
+                10 & 7,400 & 7 & 0.9$^o$ & 15 &0.9$^o$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & -&s \\
+                11 & 13,346 & 20 & 0.9$^o$ & 20 &0.9$^o$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & - &s\\
+                12 & 7,339 & 15 & 1.8$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &s\\
+                13 & 7,645 & 7 & 1.8$^o$ & \multicolumn{2}{c|}{\textemdash} & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &s\\
+                \hline
+            \end{tabular}
+        }
+        \caption[Dataset parameter settings]{\label{tab:datasets} The settings and properties for each dataset, i.e., the total number of scanlines, settings for the range and the stepping angle (step) of the respective MSS, inclusion of the different navigation data from the A50 DVL, the Xsens MTi-300 IMU (MTi), the PixHawk PX4 IMU (PX4), and the motor values (mot.val.), as well as the presence of dynamics in the scene (dyn.sce.). The UUV is operated with either fast (f) or slow (s) velocity (vel.). In the fast version, the robot additionally randomly rotates around its own z-axis.
+%Additionally, we provide a calibration dataset, where the robot is standing still for some time, which allows calibrating the internal sensors.
+        }
+    \end{table}
+
+    Parameter settings and trial complexity for each dataset are listed in Tab.\,\ref{tab:datasets}.
+    Velocity indicators (fast/slow) are noted, and means, that the UUV is moving fast with difficult trajectories, or slow with easier trajectories.
+    The varying MSS parameters include range and stepping angle.
+    Range, stepping angle, and UUV velocity directly affect scan registration methods, especially SLAM methods, that rely on continuous updates.
+    Hence, higher velocity reduces scan overlap and higher stepping angles lower the resolution.
+
+    Datasets $1-8$ represent standard scenarios with static environments and varying MSS parameters.
+    Datasets $9-11$ use two MSS (Ping360 and Micron DST) for acoustic "pollution" scenarios.
+    Therefore, the Ping360 data is noisier, and makes testing of robustness possible.
+    Micron DST data can be used for bathymetry or 3D mapping.
+    Datasets $12-13$ include dynamic scenes via an AUV in the field of view, creating challenges for scan registration in mapping and SLAM.
+
+
+    For a technical validation of the datasets, first, the ground truth is used for a visualization of the environment, and second an Extended Kalman Filter (EKF) is used, which estimates $^{EKF}\!\!\hat{p}_t =\, ^{EKF}\!\!(x_t, y_t, \theta_t)^T$ based on the IMU and DVL data.
+    For each scan-line $s_t$ of the MSS, the ground truth pose $^{GT}\!\!p_t =\, ^{GT}\!\!(x_t, y_t, \theta_t)^T$ of the UUV is used to render $s_t$ into the map.
+
+    \begin{figure*}[!htb]
+        \centering
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/GTMapmicron15m15m}
+        \end{subfigure}
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/GTMapmicron7m15m}
+        \end{subfigure}
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/GTMapmicron20m20m}
+        \end{subfigure}
+        \caption{Visualizations of the datasets 9 to 11 where a second MSS in form of a Micron DST generates acoustic disturbances.}
+        \label{fig:gt_map_with_micron}
+    \end{figure*}
+
+    In order to give a short overview over the different datasets, here only the visualization of dataset $9-11$ is included.
+
+    The rendered maps feature a rainbow color-palette on the left illustrating normalized amplitude returns from the MSS, with pool walls producing distinct backscatter values between 0.35 and 0.6, and open water/areas beyond walls showing low amplitudes close to zero (background noise), while zeros denote sensor-uncaptured regions.
+    The UUV's ground-truth path is overlaid on each map, accompanied by a heat-palette on the right indicating camera counts tracking the robot.
+    However, positional and especially orientation accuracy remain high even in low-camera scenarios.
+    Red crosses mark camera locations on each map, with further details provided in the datasets.
+
+    In Fig.\,\ref{fig:gt_map_with_micron} dataset $9-11$ is rendered with the help of the ground truth.
+    The acoustic disturbances are visible in the maps.
+    This reflects the higher noise level inside the sonar-beams.
+
+    In Fig.\,\ref{fig:ekf_map_with_micron} the EKF visualization of dataset $9-11$ are shown.
+    Predictably, the basic EKF-based navigation system exhibits notable inaccuracies, as shown by the visualized mapping results.
+
+    \begin{table}[!htb]
+        \centering
+        \begin{tabular}{|c||c|c|c||c|}
+            \hline
+            \multicolumn{5}{|c|}{\em EKF performance } \\ \hline
+            data- & \multicolumn{3}{c||}{pose MSE} & drift \\
+            set & $\Delta x:$ $\mu, \sigma$ (m) & $\Delta y:$ $\mu, \sigma$ (m)& $\Delta \theta:$ $\mu, \sigma$ ($rad$)& $||.||_2$ (m)\\
+            \hline
+            1 &$0.73\pm0.56$  &  $0.57\pm0.55$ & $0.33\pm0.2$  & $2.0$  \\
+            2 & $0.52\pm0.51$ &  $0.23\pm0.19$ & $0.13\pm0.14$  &  $1.64$ \\
+            3 &$0.89\pm0.78$  &$0.72\pm   0.76$   & $0.45\pm 0.26$  &  $2.53$ \\
+            4 & $0.36\pm0.28$ & $ 0.35\pm0.34$  & $0.19\pm0.2$  &  $1.37$ \\
+            5 & $1.06\pm0.92$ & $0.77\pm0.78$  & $0.54\pm0.31$  & $2.99$  \\
+            6 & $0.47\pm0.44$ & $0.38\pm0.31$  &  $0.21\pm0.14$ & $1.32$  \\
+            7 & $0.84\pm0.67$ & $0.57\pm0.55$  & $0.42\pm0.24$  &  $2.46$ \\
+            8 & $0.56\pm0.35$ & $0.33\pm0.27$  & $0.2\pm0.1$  & $1.62$  \\
+            9 & $0.74\pm0.61$ & $0.78\pm0.67$  &  $0.44\pm0.30$ & $3.13$  \\
+            10 & $0.58\pm0.36$ & $0.57\pm0.52$  & $0.21\pm0.13$  &  $1.3$ \\
+            11 & $1.36\pm1.39$ & $1.06\pm1.12$  & $0.67\pm0.43$  &  $2.28$ \\
+            12 & $0.36\pm0.33$ & $0.78\pm0.66$  &  $0.36\pm0.23$ & $1.93$  \\
+            13 & $0.76\pm0.66$ & $0.48\pm0.47$  & $0.39\pm0.23$  & $2.47$  \\
+            \hline
+        \end{tabular}
+        \caption[]{\label{tab:EKFmetrics} The results of two example error metrics for a quantitative analysis of the baseline solution with an EKF, namely the mean $\mu$ and the variance $\sigma$ of a pose-based mean squared error (MSE) and the total drift, i.e., the Euclidean Distance $||.||_2$ between the final estimated and the real position of the UUV.}
+    \end{table}
+
+    In Tab.\,\ref{tab:EKFmetrics} results on all the datasets can be seen.
+    The drift over time of all methods are on a scale of meters, which shows that more sophisticated methods are necessary to have an accurate representation of the map.
+
+    \begin{figure*}[!htb]
+        \centering
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/EKFMapmicron15m15m}
+        \end{subfigure}
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/EKFMapmicron7m15m}
+        \end{subfigure}
+        \begin{subfigure}{.32\linewidth}
+            \centering
+            \includegraphics[width=1.0\linewidth]{figs/dataset/EKFMapmicron20m20m}
+        \end{subfigure}
+        \caption[Maps with EKF-navigation]{Maps with EKF-navigation using the datasets 9 to 11 with a 2$^{nd}$ MSS, i.e., with acoustic disturbances.}
+        \label{fig:ekf_map_with_micron}
+    \end{figure*}
+
+    The datasets and associated materials, including ROS2 message definitions available on GitHub and detailed technical documentation in a white-paper accessible via IEEE Dataport (\url{https://doi.org/10.21227/dy87-1k42}), provide comprehensive resources for researchers.
+    The white-paper specifies sensor frame locations relative to the unmanned underwater vehicle's (UUV) reference frame, while ROS2 bags enable data recording and operation under the three-clause BSD license.
+    All dataset related code is freely available under a Creative Commons Attribution-NonCommercial (CC BY-NC) license.
+    Supplementary YAML-formatted data can be processed using open-source tools such as Python libraries for data science and mathematical analysis.
+
+
+    \chapter{Conclusion}\label{ch:conclusion}
+
+    Building maps in unknown confined environments requires sophisticated SLAM algorithms, that can be computed in real-time and are robust.
+    Affordable hardware has higher noise, lower range, lower resolution and update rates.
+    Advantages in affordable visual and lidar SLAM with aerial drones or ground robots are not transferable to the underwater domain.
+    This gap between the two domains require new perception and and design approach.
+
+    The focus of this thesis included four primary challenges.
+    The development of an affordable underwater platform for operating in challenging environments.
+    Perception, with affordable sonars to robustly align multiple sonar scans.
+    The design of a complete SLAM system for real-time ability with an underwater vehicle.
+    And the focus should be on open-sourcing the findings.
+
+
+    The challenges and state of the art of affordable underwater robotics in confined spaces is addressed in Chapter\,\ref{ch:low_cost}.
+    The Valentin Bunker Memorial in Bremen is described and used as a case study to understand the challenges and possible hardware usages to create a map of the environment.
+    First tests of using a BlueROV2 for the exploration of the unknown environment is shown.
+    The exploration information is used for an underwater brick wall, to find out, if this wall was build after or during WW-II, which as the best estimate seems to be during.
+
+    Using sonar data for map creation requires certain registration methods for sonar data.
+    Current methods lack the robustness necessary for affordable sonars in underwater robotics.
+    In Chapter\,\ref{ch:registration}, a new registration method, called Fourier-SOFT in 2D was described and tested.
+    The registration methods makes use of the Fourier transformation to robustly make sonar scan registrations, that have multimodal solutions.
+    Additionally, first tests in the Bunker Valentin were performed to test the Fourier-SOFT in 2D registration method in a SLAM setup to create a map of the unknown environment.
+
+    Using a slow mechanical scanning sonar poses challenges regarding a classical SLAM system.
+    Therefore, a new front-end design was described in Chapter\,\ref{ch:slam}.
+    Instead of using a node for each full sonar scan, each new sonar measurement is integrated in the node graph.
+    The new front-end design is then used to create an affordable SLAM system, that can be used with resource limited hardware and reasonable robustness.
+    The SLAM system is used to map parts of the Bunker Valentin, and the code is available online.
+
+    In Chapter\,\ref{ch:open_source} the BlueROV2 is presented, that was used during many experiments and publications.
+    The hardware adaptiation and software adaptations are described and openly available.
+    Additionally, a ground truth dataset for 2D navigation and mapping is presented, which can be used to further develop new SLAM systems for affordable underwater robotics.
+
+    Future research directions are addressed in Chapter,\,\ref{ch:future_research}, where three potential directions are explored, which include different sonars, usage of the multi hypothesis option of FS2D for robust SLAM, and the extension of FS2D to 3D with the use of a quaternion based extension for robust peak detection.
+
+    With the primary challenges in mind, this thesis is a step forward in affordable open underwater robotics with the focus on perception.
+    The Fourier-SOFT in 2D registration method offers a robust way to registrate two different sonar scans, without the need to use a heuristic to convert intensity values to points.
+    Additionally, the combination with Synthetic Scan Formation offers a way to create a SLAM system, that can create a map of an unknown confined underwater environment.
+    This thesis shows, that using affordable underwater robots can be used for complex mapping tasks, without the need of very expensive complicated sonar equipment.
+    While there are still remaining challenges in affordable underwater SLAM, open-sourcing the findings and software, together with the openly available data-set, will help to develop and new algorithms.
+    Overall, the findings demonstrate a promising potential of affordable underwater robots for usage in confined environments.
+
+
+
+    \section{Future research directions}\label{ch:future_research}
+
+
+    This section focuses on three different research directions, which could be pursued in the future.
+    First, the option of using different sonar sensors, based on the methods developed in this thesis is explored.
+    Second, the multi hypothesis advantages of FS2D, could be used to take advantage in a different optimization technique for SLAM back-ends.
+    Third, an extension of FS2D registration method back to 3D, with the knowledge gained during the development of the 2D version is explored.
+
+
+    \subsubsection{2D registration with other sonars}\label{sec:registration_with_different_sensors}
+
+
+    Using a mechanical scanning sonar for SLAM has two important characteristics.
+    First, the scanning of an area takes a long time, since the mechanical head needs to rotate over the full area, which can take up to 30 seconds.
+    Additionally, the sonar scans are corrected by an internal state estimation, as was done in Section\,\ref{sec:full_slam}, and converted into a 2D image, that has a circular pattern.
+    What was not yet tested was the FS2D registration on other type of sonar data.
+
+
+    Forward looking sonars are often used to see what is exactly in front of the robot, and are attached to the robot to view the horizontal plane
+    The sonar image can be rendered as a 2D image, where a fan shape is depicted.
+    The main difference lies in the shape of the 2D image.
+    Computing the rotation component with FS2D benefits from a circular pattern, since a circle has no correct rotation.
+    When using a fan shaped image, this rotation computation needs to be redesigned, and compensated to this new shape.
+
+    Another possibility is to use an imaging sonar, that is tilted towards the floor and creates a sonar image of the ground.
+    The same problems and solutions as the forward looking sonar can be used to make registrations work.
+    Additionally, since the image of the ground is close to a plane, other techniques such as the 4 point transformation for images could be used in combination with FS2D to track the ground in the sonar image.
+
+    Sidescan sonars are used to cover large parts of the ocean floor.
+    They are positioned on the robot left and right and have a certain angle to look down.
+    When using the sonar measurements of a moving robot above the ground, an example resulting image can be seen in Fig.\,\ref{fig:sonar_types}.
+    Here, subimages can be used for registration with the FS2D to correct the images over time.
+    When GPS is available, the error still is in the range of up to 5 meters.
+    Therefore a correction is necessary.
+
+    These are all options where the FS2D could be used in the future to explore the possibility to use other sonar data.
+
+
+
+
+
+
+    \subsubsection{Robust Multi Hypothesis SLAM}\label{sec:multihypothesis_slam}
+
+    Today, most SLAM algorithms are based on some kind of graph/factor graph formulation.
+    Inside the formulation of the graph, a transition between two states, which is measured by the robot, is recorded and constructed.
+    In the beginning, the assumption was, that each transition between two states was accurate enough and a covariance was modeled to display the uncertainty of the measurement.
+    Later, more robust approaches were used, where it was not assumed, that every measurement is necessary correct in a certain uncertainty.
+
+    This assumption is often a good one, since perception is often computed by an iterative process, where in the end a solution can be correct, or incorrect.
+    In the case of the FS2D, a list of possible registrations are computed.
+    Which means, that out of a list of potential solutions one might be correct, but not multiple, or they are all wrong.
+    This means that the optimization can use the multi hypothesis of the registration to optimize the graph in the background.
+    It can result in increases in robustness and accuracy.
+
+
+
+
+
+    \subsubsection{FMS Quaternion}\label{sec:fms_quaternion}
+
+
+    Fourier-SOFT in 2D\,(FS2D) is a robust registration method for sonar scans.
+    It was using the idea of the Fourier-Mellin-SOFT 7-DOF\,\cite{preamble}{7-DoF-registration-ICRA11} registration method and reduced it to 2D.
+    The key of using FS2D in a SLAM algorithm is the peak detection used to difference peaks from each other.
+    In 3D this peak detection cannot be used directly on the multi-dimensional correlation space, because of the gimbal lock issues with 3D rotations.
+    This results in multiple peaks corresponding to the same rotation.
+    Instead, using quaternions to represent the 3D rotation, a peak detection can be used on the 4D space of the quaternion.
+    This quaternion representation allows for more robust and accurate identification of potential rotations, providing a list of plausible scan alignments.
+
+    With an update to the 3D registration algorithm, it can also be used for SLAM with other sonar scanners, or be used in other non-water domains.
+
+
+    \addcontentsline{toc}{chapter}{Bibliography} % Add starred chapter to contents
+    \bibliography{preamble}{allReferences,addionalBibTim}{Bibliography}
+
+
+%    \printbibliography
+% Closing the tocs and lists
+    \stopcontents[tocpart1] % Stops the tocpart1
+    \stoplist[lotpart1]{lot} % Stops the lotpart1
+    \stoplist[lofpart1]{lof} % Stops the lofpart1
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GROUP FOR PART 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begingroup
+
+% In this group, we want Bibliographies to show up as sections
+    \patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
+
+% In this group, we want Roman numbering of chapters 
+    \renewcommand\thechapter{\Roman{chapter}}
+
+% In this group, we want to restart the chapter numbering
+    \setcounter{chapter}{-1}\stepcounter{chapter}
+
+% Resume the contents counter of tocpart2 to include items from PART 2
+    \resumecontents[tocpart2]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PART 2 PUBLICATIONS
+% In this part you can include all your publications which
+% the dissertation should comprise of. Depending on your uni
+% guidelines, the publications could be attached in their original
+% templates (just as pdfs), or they can be put into a unified
+% style of this dissertation. Adding them as pdfs is for sure
+% easier, but it degrades the style of the document and it
+% also can introduce problems with copyright (check the guidelines
+% of the publishers where your papers were printed).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \cleardoublepage
+    \epigraphhead[400]{\smalltoc{p2}{0}{0}{}}
+    \part*{Publications}\label{Publications}
+    \addcontentsline{toc}{part}{Publications}
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART2 - CHAPTER 1
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \chapter{Title of the First Publication}
+    \chapter[Dating Wall Constructions from Brick Sizes \dots]{Dating Wall Constructions from Brick Sizes in the Flooded Basement of a WW-II Submarine Bunker for the Digitization of Cultural Heritage}\label{paper:dating_wall}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+    %    \smalltoc{p2ch1}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Birk, A., Buda, F., \& Hansen, T. (2023, June). Dating wall constructions from brick sizes in the flooded basement of a ww-ii submarine bunker for the digitization of cultural heritage. In \textit{OCEANS 2023-Limerick}(pp. 1-6). IEEE.
+
+%    \section*{Author's contribution}
+%    The author contributed to \dots. Furthermore, wrote a significant part of \dots.
+
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/OCEANSLimerick52467.2023.10244268}{10.1109/OCEANSLimerick52467.2023.10244268}
+    \copyright 2023 IEEE. Reprinted, with permission, from Andreas Birk, Frederike Buda, \& Tim Hansen, Dating wall constructions from brick sizes in the flooded basement of a ww-ii submarine bunker for the digitization of cultural heritage, IEEE OCEANS 2023 - Limerick, June 2023
+
+    % Include the contents of the publication here https://doi.org/10.1109/OCEANSLimerick52467.2023.10244268  10.1109/OCEANSLimerick52467.2023.10244268
+
+    \includepdf[pages=-]{pdfFilesPublications/Dating_Wall_Constructions_from_Brick_Sizes_in_the_Flooded_Basement_of_a_WW-II_Submarine_Bunker_for_the_Digitization_of_Cultural_Heritage}
+    \clearpage
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART 2 - CHAPTER 2
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    \chapter[Using Registration with Fourier-SOFT in 2D (FS2D) \dots]{Using Registration with Fourier-SOFT in 2D (FS2D) for Robust Scan Matching of Sonar Range Data}\label{paper:fs2d}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+%    \smalltoc{p2ch2}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Hansen, T., \& Birk, A. (2023, May). Using registration with fourier-soft in 2d (fs2d) for robust scan matching of sonar range data. In \textit{2023 IEEE International Conference on Robotics and Automation (ICRA)}(pp. 3080-3087). IEEE.
+
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/ICRA48891.2023.10160519}{10.1109/ICRA48891.2023.10160519}
+    \copyright 2023 IEEE. Reprinted, with permission, from Andreas Birk \& Tim Hansen, Using registration with fourier-soft in 2d (fs2d) for robust scan matching of sonar range data, IEEE International Conference on Robotics and Automation (ICRA) - London, June 2023
+
+
+    % Include the contents of the publication here
+    \includepdf[pages=-]{pdfFilesPublications/Using_Registration_with_Fourier-SOFT_in_2D_FS2D_for_Robust_Scan_Matching_of_Sonar_Range_Data}
+    \clearpage
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART2 - CHAPTER 3
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \chapter{Title of the First Publication}
+    \chapter[Underwater Exploration with Sonar of the Flooded \dots]{Underwater Exploration with Sonar of the Flooded Basement of a WW-II Submarine Bunker in the Context of the Digitization of Cultural Heritage}\label{paper:underwater_exploration}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+%    \smalltoc{p2ch1}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Hansen, T., Buda, F., \& Birk, A. (2023, June). Underwater exploration with sonar of the flooded basement of a WW-II submarine bunker in the context of the digitization of cultural heritage. In \textit{OCEANS 2023-Limerick} (pp. 1-6). IEEE.
+
+
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/OCEANSLimerick52467.2023.10244377}{10.1109/OCEANSLimerick52467.2023.10244377}
+    \copyright 2023 IEEE. Reprinted, with permission, from Andreas Birk, Frederike Buda, \& Tim Hansen, Underwater Exploration with Sonar of the Flooded Basement of a WW-II Submarine Bunker in the Context of the Digitization of Cultural Heritage, IEEE OCEANS 2023 - Limerick, June 2023
+
+
+    \includepdf[pages=-]{pdfFilesPublications/Underwater_Exploration_with_Sonar_of_the_Flooded_Basement_of_a_WW-II_Submarine_Bunker_in_the_Context_of_the_Digitization_of_Cultural_Heritage}
+    \clearpage
+
+
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART2 - CHAPTER 4
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \chapter{Title of the First Publication}
+    \chapter[Synthetic Scan Formation for Underwater Mapping \dots]{Synthetic Scan Formation for Underwater Mapping with Low-Cost Mechanical Scanning Sonars (MSS)}\label{paper:synthetic_scan}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+    %    \smalltoc{p2ch1}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Hansen, T., \& Birk, A. (2023). Synthetic scan formation for underwater mapping with low-cost mechanical scanning sonars (MSS). \textit{IEEE Access, 11}, 96854-96864.
+
+%    \section*{Author's contribution}
+%    The author contributed to \dots. Furthermore, wrote a significant part of \dots.
+%
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/ACCESS.2023.3312186}{10.1109/ACCESS.2023.3312186}
+%    \copyright 2023 IEEE. Reprinted, with permission, from Andreas Birk, Frederike Buda, \& Tim Hansen, Dating wall constructions from brick sizes in the flooded basement of a ww-ii submarine bunker for the digitization of cultural heritage, IEEE OCEANS 2023 - Limerick, June 2023
+
+
+    % Include the contents of the publication here
+
+%    \includepdf[pages=-]{pdfFilesPublications/SyntheticScanFormation-IEEEAccess-v2.pdf}
+    \includepdf[pages=-]{pdfFilesPublications/Synthetic_Scan_Formation_for_Underwater_Mapping_With_Low-Cost_Mechanical_Scanning_Sonars_MSS}
+    \clearpage
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART2 - CHAPTER 5
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \chapter{Title of the First Publication}
+    \chapter[An Open-Source Solution for Fast and Accurate \dots]
+    {An Open-Source Solution for Fast and Accurate Underwater Mapping with a Low-Cost Mechanical Scanning Sonar}\label{paper:open_source_slam}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+    %    \smalltoc{p2ch1}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Hansen, T., \& Birk, A. (2024, May). An Open-Source Solution for Fast and Accurate Underwater Mapping with a Low-Cost Mechanical Scanning Sonar. In \textit{2024 IEEE International Conference on Robotics and Automation (ICRA)} (pp. 9968-9975). IEEE.
+
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/ICRA57147.2024.10609976}{10.1109/ICRA57147.2024.10609976}
+    \copyright 2024 IEEE. Reprinted, with permission, from Andreas Birk \& Tim , An Open-Source Solution for Fast and Accurate Underwater Mapping with a Low-Cost Mechanical Scanning Sonar, IEEE International Conference on Robotics and Automation (ICRA) - Yokohama, May 2024
+
+
+    % Include the contents of the publication here
+
+    \includepdf[pages=-]{pdfFilesPublications/An_Open-Source_Solution_for_Fast_and_Accurate_Underwater_Mapping_with_a_Low-Cost_Mechanical_Scanning_Sonar}
+    \clearpage
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % PART2 - CHAPTER 6
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \chapter{Title of the First Publication}
+    \chapter[Scanning Sonar Data from an Underwater \dots]
+    {Scanning Sonar Data from an Underwater Robot with Ground Truth Localization}\label{paper:dataset_paper}
+
+    % Mini table of content for this chapter {name}{start}{depth}{section name}
+    %    \smalltoc{p2ch1}{0}{3}{Outline}
+
+    \section*{Bibliographic Information}
+    % The package biblatex which supports \fullcite collides with the package multibbl
+    % I have not found a solution how to print a bib item in the text so I write it out.
+    % If you find a solution, please, post it here: https://tex.stackexchange.com/questions/173935
+    Hansen, T., Belenis, B., Firvida, M. B., Creutz, T., \& Birk, A. (2024). Scanning Sonar Data From an Underwater Robot with Ground Truth Localization. \textit{IEEE Access}, \textit{12}, 129202-129211.
+
+%    \section*{Author's contribution}
+%    The author contributed to \dots. Furthermore, wrote a significant part of \dots.
+
+    \section*{Copyright Notice}
+    This is an accepted version of this article published in \href{https://doi.org/10.1109/ACCESS.2024.3420766}{10.1109/ACCESS.2024.3420766}
+%    \copyright 2023 IEEE. Reprinted, with permission, from Andreas Birk, Frederike Buda, \& Tim Hansen, Dating wall constructions from brick sizes in the flooded basement of a ww-ii submarine bunker for the digitization of cultural heritage, IEEE OCEANS 2023 - Limerick, June 2023
+
+
+    % Include the contents of the publication here
+
+    \includepdf[pages=-]{pdfFilesPublications/Scanning_Sonar_Data_From_an_Underwater_Robot_With_Ground_Truth_Localization}
+    \clearpage
+
+
+
+
+
+
+
+
+
+
+
+    \stopcontents[p2]
+%    \stopcontents[p2ch2]
+    \stopcontents[tocpart2]
+    \endgroup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX (in case you need one)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Resume the contents counter of tocpart2 to include items from PART 2
+%\resumecontents[tocappendix]
+%
+%\appendix
+%\cleardoublepage
+%\epigraphhead[400]{
+%    \hrule\vspace{1pc}
+%    \printcontents[tocappendix]{}{0}[0]{}
+%    \vspace{1pc}\hrule}
+%\part*{Appendix}
+%\addcontentsline{toc}{part}{Appendix} % Add starred part to contents
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% APPENDIX - CHAPTER 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter{First Appendix}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% APPENDIX - CHAPTER 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter{Second Appendix}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% APPENDIX - CHAPTER 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{Complete List of Publications}
+%\addcontentsline{toc}{chapter}{Complete list of publications} % Add starred part to contents
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% APPENDIX - CV
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\clearpage
+%
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Curriculum Vit\ae} % Add starred part to contents
+%
+%\include{cv}
+%
+%\stopcontents[tocappendix]
+\end{document}

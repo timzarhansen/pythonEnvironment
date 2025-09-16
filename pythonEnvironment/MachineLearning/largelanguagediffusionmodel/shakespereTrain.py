@@ -4,22 +4,26 @@ from configuration_llada import ModelConfig
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+import open3d as o3d
 
+from pythonEnvironment.MachineLearning.gptmodel import n_head
 from pythonEnvironment.MachineLearning.largelanguagediffusionmodel import configuration_llada
 
 #1414 s mit MPS
 # hyperparameters
-batch_size = 128 # how many independent sequences will we process in parallel?
+batch_size = 64 # how many independent sequences will we process in parallel?
 block_size = 256 # what is the maximum context length for predictions?
 max_iters = 10000
 eval_interval = 200
-learning_rate = 1e-4
+learning_rate = 3e-5
 device = 'mps' if torch.mps.is_available() else 'cpu'
 eval_iters = 200 #was 200
 n_embd = 384
-n_head = 6
-n_layer = 6
+n_head = 12
+# n_head = 12
+n_layer = 12
 dropout = 0.2
+
 # ------------
 
 # torch.manual_seed(1337)
@@ -54,13 +58,10 @@ def estimate_loss(model,train_data,val_data,maskedTokenID):
             X, Y = get_batch(split, train_data, val_data,maskedTokenID)
             outputModel = model(X)
             mask = (X == maskedTokenID)
-            # masked_outputs = X[==maskedTokenID]
-            # masked_labels = labels[mask]
             mask = mask.bool()  # Ensure boolean type if not already
-            # loss = F.cross_entropy(outputModel.logits[mask], Y[mask])
             Y_masked = Y[mask]
             output_models_masked = outputModel.logits[mask,:]
-            # loss = F.cross_entropy(output_models_masked.view(-1, output_models_masked.size(-1)), Y_masked.view(-1))
+            # loss = F.cross_entropy(outputModel.logits.view(-1, outputModel.logits.size(-1)), Y.view(-1))
             loss = F.cross_entropy(output_models_masked, Y_masked)
             #compute loss stuff
             losses[k] = loss
@@ -123,14 +124,14 @@ if __name__ == '__main__':
         # sample a batch of data
         xb, yb = get_batch('train', train_data, val_data,encode('_')[0])
 
-        # evaluate the loss
+        # evaluate the loss only on the masked token
         outputModel = model(xb)
         mask = (xb == encode('_')[0])
         mask = mask.bool()  # Ensure boolean type if not already
         Y_masked = yb[mask]
         output_models_masked = outputModel.logits[mask, :]
-        # loss = F.cross_entropy(output_models_masked.view(-1, output_models_masked.size(-1)), Y_masked.view(-1))
-        loss = F.cross_entropy(output_models_masked, Y_masked)
+        loss = F.cross_entropy(outputModel.logits.view(-1, outputModel.logits.size(-1)), yb.view(-1))
+        # loss = F.cross_entropy(output_models_masked, Y_masked)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
@@ -146,7 +147,7 @@ if __name__ == '__main__':
         print(decode(sampled_idx.tolist()))
 
         # masking
-        mask = torch.rand(block_size) < 0.01  # 10 percent is changed to token
+        mask = torch.rand(block_size) < 0.1  # 10 percent is changed to token
         sampled_idx[mask] = encode('_')[0]  # Replace elements where mask is True
         # print(decode(sampled_idx.tolist()))
         print("---------------------------------------------------------------------------")

@@ -130,9 +130,9 @@ if __name__ == '__main__':
         print(decode(sampled_idx.tolist()))
 
         # masking
-        mask = torch.rand(block_size) < 0.01  # 10 percent is changed to token
+        mask = torch.rand(block_size) < 0.1  # 10 percent is changed to token
         sampled_idx[mask] = encode('_')[0]  # Replace elements where mask is True
-        contextInput[0, 0:50] = x[0, 0:50]
+        sampled_idx[0:50] = x[0, 0:50]
         print(decode(sampled_idx.tolist()))
         print("---------------------------------------------------------------------------")
 
