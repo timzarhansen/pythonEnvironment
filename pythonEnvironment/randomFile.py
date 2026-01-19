@@ -1,26 +1,35 @@
 import numpy as np
-from scipy.spatial.transform import Rotation as R
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+mpl.use('macosx')
 
-def matrix_to_transform(matrix):
-  """Converts a 4x4 transformation matrix to x, y, z, roll, pitch, yaw."""
-  translation = matrix[:3, 3]
-  rotation = R.from_matrix(matrix[:3,:3])
-  euler = rotation.as_euler('xyz', degrees=False)
-  return np.asarray([translation[0], translation[1], translation[2], euler[0], euler[1], euler[2]])
+def normalization_factor(x, y, z, currentN):
+    tmp = 0.0
+    if x < np.ceil(currentN / 2):
+        tmp = (x + 1)
+    else:
+        tmp = (currentN - x)
+    if y < np.ceil(currentN / 2):
+        tmp *= (y + 1)
+    else:
+        tmp *= (currentN - y)
+    if z < np.ceil(currentN / 2):
+        tmp *= (z + 1)
+    else:
+        tmp *= (currentN - z)
+    return tmp*tmp
 
+currentN = 10
+x_vals = np.arange(0, currentN)
+y_vals = np.arange(0, currentN)
+z_vals = np.arange(0, currentN)
 
-a = np.array([[ 9.99876632e-01,  1.57073540e-02,  0.00000000e+00,  2.37038395e+01],
-              [-1.57073540e-02,  9.99876632e-01,  0.00000000e+00,  4.21836882e-01],
-              [ 0.00000000e+00,  0.00000000e+00,  1.00000000e+00,  0.00000000e+00],
-              [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  1.00000000e+00]])
+X, Y, Z = np.meshgrid(x_vals, y_vals, z_vals)
+vectorized_func = np.vectorize(normalization_factor)
+values = vectorized_func(X, Y, Z, currentN)
 
-b = np.array([[ 0.99935171, -0.03600222,  0.        , 34.30259565],
-              [ 0.03600222,  0.99935171,  0.        ,  1.95724961],
-              [ 0.        ,  0.        ,  1.        ,  0.        ],
-              [ 0.        ,  0.        ,  0.        ,  1.        ]])
-
-result = np.dot(a, np.linalg.inv(b))
-print(matrix_to_transform(result))
-
-
-
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+scatter = ax.scatter(X.ravel(), Y.ravel(), Z.ravel(), c=values.ravel(), cmap='viridis')
+plt.colorbar(scatter)
+plt.show()
